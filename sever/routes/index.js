@@ -54,4 +54,40 @@ router.post('/delete-user', (req, res) => {
             res.send(response);
     });
 });
+router.get('/event', (req, res) => {
+    connection.query('SELECT * FROM event_emd', (err, response) => {
+        if (err)
+            res.send({ message: "Can't show data" });
+        else
+            res.send(response);
+    });
+});
+var today = new Date();
+var dd = today.getDate();
+var mm = today.getMonth() + 1;
+var yyyy = today.getFullYear();
+if (dd < 10) {
+    dd = '0' + dd;
+}
+
+if (mm < 10) {
+    mm = '0' + mm;
+}
+today = dd + '/' + mm + '/' + yyyy;
+router.get('/event-live', (req, res) => {
+    connection.query('SELECT * FROM emd.event_emd where event_date = ?', [today], (err, response) => {
+        if (err)
+            res.send({ message: "Can't show data" });
+        else
+            res.send(response);
+    });
+});
+router.get('/event-past', (req, res) => {
+    connection.query('SELECT * FROM emd.event_emd where event_date < ?', [today], (err, response) => {
+        if (err)
+            res.send({ message: "Can't show data" });
+        else
+            res.send(response);
+    });
+});
 module.exports = router;

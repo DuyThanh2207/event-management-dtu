@@ -10,12 +10,16 @@ import ManageAccount from './pages/AdminPage/ManageAccount/ManageAccount';
 import NavbarChangeAccount from './components/AdminPage/ChangeAccountInformation/NavbarChangeAccount';
 import ChangeAccountInfomation from './pages/AdminPage/ChangeAccountInformation/ChangeAccountInfomation';
 import Footer from './components/AdminPage/Footer/Footer';
+import Login from './pages/LoginPage/Login';
 function App() {
   return (
     <Router>
     <div>
       <Switch>
-      <Route exact path="/event">
+        <Route exact path="/">
+          <Login/>
+        </Route>
+        <Route exact path="/event">
           <Header/>
           <NavbarEvent/>
           <Footer/>
