@@ -11,13 +11,16 @@ import NavbarChangeAccount from './components/AdminPage/ChangeAccountInformation
 import ChangeAccountInfomation from './pages/AdminPage/ChangeAccountInformation/ChangeAccountInfomation';
 import Footer from './components/AdminPage/Footer/Footer';
 import Login from './pages/LoginPage/Login';
+import HeaderLogin from './components/LoginPage/HeaderLogin';
 function App() {
   return (
     <Router>
     <div>
       <Switch>
         <Route exact path="/">
+          <HeaderLogin/>
           <Login/>
+          <Footer/>
         </Route>
         <Route exact path="/event">
           <Header/>
