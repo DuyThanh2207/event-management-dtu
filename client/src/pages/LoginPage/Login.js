@@ -1,7 +1,6 @@
 import React from 'react';
 import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import logo from './Logo.jpg'
 const Login = () => {
     const { register, handleSubmit, errors } = useForm();
     let history = useHistory();
