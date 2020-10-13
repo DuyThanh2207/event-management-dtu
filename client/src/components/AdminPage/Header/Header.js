@@ -3,7 +3,13 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { NavLink, Link } from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 const Header = () => {
+    let history = useHistory();
+    const onLogout = () => {
+        history.push("/")
+        sessionStorage.clear();      
+    }
     return (
         <div>
             <nav className="navbar navbar-expand-sm navbar-dark" style={{backgroundColor: '#eeeeee', width: '100%'}}>
@@ -28,7 +34,7 @@ const Header = () => {
                         <AccountCircleIcon fontSize="large" color ="action"/>
                         <strong className="mt-1 ml-1" style={{color: 'black'}}>ADMIN</strong>
                     </Link>
-                    <div className="mt-2">
+                    <div className="mt-2" onClick = {() => onLogout()} style={{cursor:'pointer'}}>
                         <ExitToAppIcon fontSize="large"/>       	
                     </div>
                 </div>

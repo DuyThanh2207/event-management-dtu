@@ -6,6 +6,9 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'
 import Alert from 'react-bootstrap/Alert'
 import Fade from 'react-reveal/Fade';
+import Header from './../../../components/AdminPage/Header/Header';
+import NavbarManageAccount from './../../../components/AdminPage/ManageAccount/NavbarManageAccount';
+import Footer from './../../../components/AdminPage/Footer/Footer';
 const axios = require('axios');
 const ManageAccount = () => {
     const [createStatus, setCreateStatus] = useState(false);
@@ -164,6 +167,8 @@ const ManageAccount = () => {
     }
     return (
         <>
+            <Header/>
+            <NavbarManageAccount/>
             <div className="container mt-3">
                 <div className="container d-flex justify-content-between">
                     <div className="input-group mb-3" style={{maxWidth: '500px'}}>
@@ -212,7 +217,8 @@ const ManageAccount = () => {
                         </Alert>
                     </Fade>      
                 ): null}   
-            </div>    
+            </div> 
+            <Footer/>   
         </>);
 }
 export default ManageAccount;

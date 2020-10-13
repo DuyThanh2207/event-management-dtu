@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import Header from './../../../components/AdminPage/Header/Header';
+import NavbarEvent from './../../../components/AdminPage/Event/NavbarEvent';
+import Footer from './../../../components/AdminPage/Footer/Footer';
 const axios = require('axios');
 const EventLive = () => {
     const [eventData, setEventData] = useState([]);
@@ -45,6 +48,8 @@ const EventLive = () => {
     )
     return (
         <>
+            <Header/>
+            <NavbarEvent/>
             <div className="container mt-5">
                 <div className="row d-flex">
                     <div className="col-3 d-flex">
@@ -55,6 +60,7 @@ const EventLive = () => {
                     {showEvent()}
                 </div>
             </div>
+            <Footer/>
         </>           
     );
 }
