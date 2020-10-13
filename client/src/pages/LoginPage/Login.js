@@ -92,12 +92,7 @@ const Login = () => {
                                         />
                                         {errors.password && <p>This field is required</p>}
                                     </div>
-                                    {isFail ? (<div style={{backgroundColor:"#a3312e", color:"white", height:"30px"}} className="mt-3 d-flex align-items-center">
-                                        <div className="ml-3">
-                                            Wrong Username / password
-                                        </div>                                 
-                                    </div>)
-                                    :null}
+                                    {isFail ? (<p className="mt-2"> Wrong Username / password  </p>):null}
                                     <input type="submit" value="Login" className="btn btn-block btn-primary mt-5"/>
                                 </form>
                             </div>

@@ -28,19 +28,19 @@ const EventAll = () => {
                             <h2 style={{color: '#00839d'}}>{value.event_name}</h2>
                         </div>
                         <div className="mb-3">
-                            {value.event_place}
+                            Addres: {value.event_place}
                         </div>
                         <div className="mb-2">
-                            {value.event_date}
+                            Date: {value.event_date}
                         </div>
                         <div className="mb-2">
-                            {value.event_time}
+                            Time Start: {value.event_time}
                         </div>
                         <div className="mb-2">
-                            {value.event_duration} Hours
+                            Duration: {value.event_duration} Hours
                         </div>
                         <hr />
-                        {value.account_name}
+                        Event Center: {value.account_name}
                     </div>
                 </div>
             </div>

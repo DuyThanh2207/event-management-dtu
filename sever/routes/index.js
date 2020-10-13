@@ -104,4 +104,26 @@ router.post('/login', (req, res) => {
                 res.send({ message: "Wrong username / password !" });
         });
 });
+router.post('/change-password', (req, res) => {
+    const new_password = req.body.new_password
+    const old_password = req.body.old_password
+    const account_id = req.body.account_id
+    connection.query(
+        'SELECT * FROM account where account_id = ? and account_password = ?', [account_id, old_password],
+        (error, results) => {
+            if (error)
+                res.send({ message: "Old password is not correct" })
+            if (results.length > 0) {
+                connection.query(
+                    'UPDATE account SET account_password = ? where account_id = ?', [new_password, account_id],
+                    (error, results) => {
+                        if (error)
+                            res.send({ message: "Can't update your account" })
+                        else
+                            res.send(results)
+                    })
+            } else
+                res.send({ message: "Old password is not correct" });
+        });
+});
 module.exports = router;
