@@ -90,4 +90,18 @@ router.get('/event-past', (req, res) => {
             res.send(response);
     });
 });
+router.post('/login', (req, res) => {
+    const account_username = req.body.account_username
+    const account_password = req.body.account_password
+    connection.query(
+        'SELECT * FROM account where account_username = ? and account_password = ?', [account_username, account_password],
+        (error, results) => {
+            if (error)
+                res.send({ message: "Wrong username / password !" })
+            if (results.length > 0) {
+                res.send(results)
+            } else
+                res.send({ message: "Wrong username / password !" });
+        });
+});
 module.exports = router;

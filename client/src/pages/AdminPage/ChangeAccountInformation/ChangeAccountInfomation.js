@@ -1,6 +1,9 @@
 import React from 'react';
 import { useForm } from "react-hook-form";
 import "./style.css";
+import Header from './../../../components/AdminPage/Header/Header';
+import NavbarChangeAccount from './../../../components/AdminPage/ChangeAccountInformation/NavbarChangeAccount';
+import Footer from './../../../components/AdminPage/Footer/Footer';
 const ChangeAccountInfomation = () => {
     const { register, handleSubmit, errors } = useForm();
     const getEditAccount = (data) => {
@@ -8,6 +11,8 @@ const ChangeAccountInfomation = () => {
     }
     return (
         <div>
+            <Header/>
+            <NavbarChangeAccount/>
             <div className="container mt-5 d-flex justify-content-center">
                 <div className="card" style={{width: '50%'}}>
                     <div className="card-body">
@@ -33,6 +38,7 @@ const ChangeAccountInfomation = () => {
                     </div>
                 </div>
             </div>
+            <Footer/>
         </div>
     );
 }
