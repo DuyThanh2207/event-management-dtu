@@ -32,7 +32,7 @@ const Header = () => {
                     </div>      
                     <Link to="/change-password" className="d-flex nav-link">
                         <AccountCircleIcon fontSize="large" color ="action"/>
-                        <strong className="mt-1 ml-1" style={{color: 'black'}}>ADMIN</strong>
+                        <strong className="mt-1 ml-1" style={{color: 'black'}}>{sessionStorage.getItem("account_name")}</strong>
                     </Link>
                     <div className="mt-2" onClick = {() => onLogout()} style={{cursor:'pointer'}}>
                         <ExitToAppIcon fontSize="large"/>       	

@@ -11,7 +11,6 @@ import PrivateRoute from './helper/PrivateRouter';
 import PublicRouter from './helper/PublicRouter';
 
 function App() {
-  console.log(sessionStorage.getItem("loggedIn"));
   return (
     <Router>
     <div>

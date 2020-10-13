@@ -1,13 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
 import "./style.css";
 import Header from './../../../components/AdminPage/Header/Header';
 import NavbarChangeAccount from './../../../components/AdminPage/ChangeAccountInformation/NavbarChangeAccount';
 import Footer from './../../../components/AdminPage/Footer/Footer';
+import { useHistory } from "react-router-dom";
+const axios = require('axios');
 const ChangeAccountInfomation = () => {
     const { register, handleSubmit, errors } = useForm();
+    const [messenger, setMessenger] = useState();
+    const [isNotice, setIsNotice] = useState(false);
+    let history = useHistory();
     const getEditAccount = (data) => {
-        console.log(data);
+        if(data.oldPassword === data.newPassword){
+            setIsNotice(true)
+            setMessenger("New password is can't same with old password")
+        }
+        else {
+            axios.post('/change-password', {
+                new_password : data.newPassword,
+                old_password : data.oldPassword,
+                account_id : sessionStorage.getItem("account_id")
+              })
+              .then((res) => {
+                if(res.data.message){
+                    setIsNotice(true)
+                    setMessenger(res.data.message)
+                }
+                else{
+                    alert("Success !")
+                    history.push("/event")
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        }
     }
     return (
         <div>
@@ -33,10 +61,11 @@ const ChangeAccountInfomation = () => {
                                 ref={register({required: true})}
                             />
                             {errors.newPassword && <p>This field is required</p>}
+                            {isNotice ? (<p className="mt-3">{messenger}</p>):null}
                             <input type="submit" value="Apply" className="btn btn-primary btn-block mt-4"/>                 
                         </form>  
                     </div>
-                </div>
+                </div>               
             </div>
             <Footer/>
         </div>
