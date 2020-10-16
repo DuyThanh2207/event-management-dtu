@@ -75,7 +75,7 @@ if (mm < 10) {
 }
 today = dd + '/' + mm + '/' + yyyy;
 router.get('/event-live', (req, res) => {
-    connection.query('SELECT * FROM emd.event_emd where event_date = ?', [today], (err, response) => {
+    connection.query('SELECT * FROM event_emd where event_date = ?', [today], (err, response) => {
         if (err)
             res.send({ message: "Can't show data" });
         else
@@ -83,7 +83,7 @@ router.get('/event-live', (req, res) => {
     });
 });
 router.get('/event-past', (req, res) => {
-    connection.query('SELECT * FROM emd.event_emd where event_date < ?', [today], (err, response) => {
+    connection.query('SELECT * FROM event_emd where event_date < ?', [today], (err, response) => {
         if (err)
             res.send({ message: "Can't show data" });
         else
@@ -125,5 +125,70 @@ router.post('/change-password', (req, res) => {
             } else
                 res.send({ message: "Old password is not correct" });
         });
+});
+router.post('/event-center', (req, res) => {
+    const account_name = req.body.account_name
+    connection.query('SELECT * FROM event_emd where account_name = ?', [account_name], (err, response) => {
+        if (err)
+            res.send({ message: "Can't show data" });
+        else
+            res.send(response);
+    });
+});
+router.post('/event-live-center', (req, res) => {
+    const account_name = req.body.account_name
+    connection.query('SELECT * FROM event_emd where event_date = ? and account_name = ?', [today, account_name], (err, response) => {
+        if (err)
+            res.send({ message: "Can't show data" });
+        else
+            res.send(response);
+    });
+});
+router.post('/event-past-center', (req, res) => {
+    const account_name = req.body.account_name
+    connection.query('SELECT * FROM event_emd where event_date < ? and account_name = ?', [today, account_name], (err, response) => {
+        if (err)
+            res.send({ message: "Can't show data" });
+        else
+            res.send(response);
+    });
+});
+router.post('/member', (req, res) => {
+    const account_id = req.body.account_id
+    connection.query('SELECT account_id, account_name, account_email FROM account a, assignment b where a.account_id = b.staff_id and b.center_id = ?', [account_id], (err, response) => {
+        if (err)
+            res.send({ message: "Can't show member" });
+        else
+            res.send(response);
+    });
+});
+router.get('/member-all', (req, res) => {
+    connection.query('SELECT account_id, account_name FROM allstaff where center_id is null', (err, response) => {
+        if (err)
+            res.send({ message: "Can't show member" });
+        if (response.length > 0)
+            res.send(response);
+        else
+            res.send({ message: "There are no members who have no team yet" })
+    });
+});
+router.post('/add-member', (req, res) => {
+    const account_staff_id = req.body.account_staff_id
+    const account_center_id = req.body.account_center_id
+    connection.query('INSERT INTO assignment VALUES (?, ?)', [account_staff_id, account_center_id], (err, response) => {
+        if (err)
+            res.send({ message: "Can't add member" });
+        else
+            res.send(response);
+    });
+});
+router.post('/delete-member', (req, res) => {
+    const account_staff_id = req.body.account_staff_id
+    connection.query('DELETE FROM assignment WHERE staff_id = ?', [account_staff_id], (err, response) => {
+        if (err)
+            res.send({ message: "Can't delete member" });
+        else
+            res.send(response);
+    });
 });
 module.exports = router;
