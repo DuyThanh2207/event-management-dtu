@@ -9,6 +9,15 @@ import Login from './pages/LoginPage/Login';
 import Event from './pages/AdminPage/EventPage/Event';
 import PrivateRoute from './helper/PrivateRouter';
 import PublicRouter from './helper/PublicRouter';
+import EventCenter from './pages/CenterPage/Event/EventCenter';
+import EventAllCenter from './pages/CenterPage/Event/EventAllCenter';
+import EventLiveCenter from './pages/CenterPage/Event/EventLiveCenter';
+import EventPastCenter from './pages/CenterPage/Event/EventPastCenter';
+import Team from './pages/CenterPage/Team/Team';
+import Member from './pages/CenterPage/Team/Member';
+import GiveTasks from './pages/CenterPage/Team/GiveTasks';
+import TaskDone from './pages/CenterPage/Team/TaskDone';
+import TaskNotDone from './pages/CenterPage/Team/TaskNotDone';
 
 function App() {
   return (
@@ -19,22 +28,41 @@ function App() {
           <Login/>
         </PublicRouter>
         <PrivateRoute exact path="/event">
-          <Event />
+          {sessionStorage.getItem("account_role") === "Admin" && <Event />}
+          {sessionStorage.getItem("account_role") === "DTU Event Center" && <EventCenter />}
         </PrivateRoute>
         <PrivateRoute exact path="/event/event-all">
-          <EventAll/>   
+          {sessionStorage.getItem("account_role") === "Admin" && <EventAll/>}
+          {sessionStorage.getItem("account_role") === "DTU Event Center" && <EventAllCenter/>}
         </PrivateRoute>
         <PrivateRoute exact path="/event/event-live">
-          <EventLive/>    
+          {sessionStorage.getItem("account_role") === "Admin" && <EventLive/> }
+          {sessionStorage.getItem("account_role") === "DTU Event Center" && <EventLiveCenter/>}   
         </PrivateRoute>
         <PrivateRoute exact path="/event/event-past"> 
-          <EventPast/>
+          {sessionStorage.getItem("account_role") === "Admin" && <EventPast/>}
+          {sessionStorage.getItem("account_role") === "DTU Event Center" && <EventPastCenter/>}
         </PrivateRoute>
         <PrivateRoute exact path="/manage-account">
           <ManageAccount/>
         </PrivateRoute>
         <PrivateRoute exact path="/change-password">
           <ChangeAccountInfomation/>    
+        </PrivateRoute>
+        <PrivateRoute exact path="/team">
+          <Team/>    
+        </PrivateRoute>
+        <PrivateRoute exact path="/team/member">
+          <Member/>    
+        </PrivateRoute>
+        <PrivateRoute exact path="/team/give-tasks">
+          <GiveTasks/>    
+        </PrivateRoute>
+        <PrivateRoute exact path="/team/tasks-done">
+          <TaskDone/>    
+        </PrivateRoute>
+        <PrivateRoute exact path="/team/tasks-not-done">
+          <TaskNotDone/>    
         </PrivateRoute>
       </Switch>
     </div>

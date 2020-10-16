@@ -19,23 +19,21 @@ const Login = () => {
             }
             else {
                 setIsFail(false)
-                console.log(res.data[0]);
                 sessionStorage.setItem("loggedIn", true);
                 sessionStorage.setItem("account_id", res.data[0].account_id);
                 sessionStorage.setItem("account_name", res.data[0].account_name);
-                sessionStorage.setItem("account_username", res.data[0].account_username);
-                sessionStorage.setItem("account_password", res.data[0].account_password);
                 sessionStorage.setItem("account_email", res.data[0].account_email);
                 sessionStorage.setItem("account_role", res.data[0].account_role);
                 if(sessionStorage.getItem("account_role") === "Admin"){
                     history.push("/event")
                 }
                 else if(sessionStorage.getItem("account_role") === "DTU Event Center"){
-                    alert("DTU Event Center")
+                    history.push("/event")
                 }
                 else if(sessionStorage.getItem("account_role") === "DTU Event Staff"){
                     alert("DTU Event Staff")
                 }
+                window.location.reload();
             }
         })
           .catch((error) => {
