@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import Header from './../../../components/AdminPage/Header/Header';
-import NavbarEvent from './../../../components/AdminPage/Event/NavbarEvent';
-import Footer from './../../../components/AdminPage/Footer/Footer';
+import Header from './../../../components/Header';
+import Navbar from './../../../components/AdminPage/Navbar';
+import Footer from './../../../components/Footer';
 const axios = require('axios');
 const EventAll = () => {
     const [eventData, setEventData] = useState([]);
@@ -16,14 +16,14 @@ const EventAll = () => {
     })
     var dataSearch = []
     eventData.forEach((item) => {
-        if (item.event_name.toLowerCase().indexOf(searchText) !== -1 || item.event_place.toLowerCase().indexOf(searchText) !== -1 || item.account_name.toLowerCase().indexOf(searchText) !== -1)
+        if (item.event_name.toLowerCase().indexOf(searchText.toLowerCase()) !== -1 || item.event_place.toLowerCase().indexOf(searchText.toLowerCase()) !== -1 || item.account_name.toLowerCase().indexOf(searchText.toLowerCase()) !== -1)
             dataSearch.push(item)
     })
     const showEvent = () =>
         dataSearch.map((value, index) =>(
             <div className="col-12 mt-5" style={{marginLeft: '-50px'}}>
                 <div className="card" style={{width: '100%'}}>
-                    <div className="container mt-3 mb-3 col-11">
+                    <div className="container mt-3 mb-3 col-11" id={index}>
                         <div className="mb-3">
                             <h2 style={{color: '#00839d'}}>{value.event_name}</h2>
                         </div>
@@ -48,19 +48,29 @@ const EventAll = () => {
     )
     return (
         <>
-            <Header/>
-            <NavbarEvent/>
-            <div className="container mt-5">
-                <div className="row d-flex">
-                    <div className="col-3 d-flex">
-                        <input type="text" className="form-control" placeholder="Search" onChange = {(e) => setSearchText(e.target.value)}/>
-                    </div>
+            <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
+                <Header/>            
+                <div className="app-main">
+                    <Navbar/>
+                    <div className="app-main__outer">
+                        <div className="app-main__inner">
+                            <div className="row">
+                                <div className="container mt-3 mb-5">
+                                    <div className="row d-flex">
+                                        <div className="col-3 d-flex">
+                                            <input type="text" className="form-control" placeholder="Search" onChange = {(e) => setSearchText(e.target.value)}/>
+                                        </div>
+                                    </div>
+                                    <div className="row ml-5 mb-5">
+                                        {showEvent()}
+                                    </div>
+                                </div>
+                            </div>
+                            <Footer/>
+                        </div>
+                    </div>   
                 </div>
-                <div className="row ml-5 mb-5">
-                    {showEvent()}
-                </div>
-            </div>
-            <Footer/>
+            </div>      
         </>           
     );
 }

@@ -31,22 +31,22 @@ function App() {
           {sessionStorage.getItem("account_role") === "Admin" && <Event />}
           {sessionStorage.getItem("account_role") === "DTU Event Center" && <EventCenter />}
         </PrivateRoute>
-        <PrivateRoute exact path="/event/event-all">
+        <PrivateRoute exact path="/event-all">
           {sessionStorage.getItem("account_role") === "Admin" && <EventAll/>}
           {sessionStorage.getItem("account_role") === "DTU Event Center" && <EventAllCenter/>}
         </PrivateRoute>
-        <PrivateRoute exact path="/event/event-live">
+        <PrivateRoute exact path="/event-future">
           {sessionStorage.getItem("account_role") === "Admin" && <EventLive/> }
           {sessionStorage.getItem("account_role") === "DTU Event Center" && <EventLiveCenter/>}   
         </PrivateRoute>
-        <PrivateRoute exact path="/event/event-past"> 
+        <PrivateRoute exact path="/event-past"> 
           {sessionStorage.getItem("account_role") === "Admin" && <EventPast/>}
           {sessionStorage.getItem("account_role") === "DTU Event Center" && <EventPastCenter/>}
         </PrivateRoute>
         <PrivateRoute exact path="/manage-account">
           <ManageAccount/>
         </PrivateRoute>
-        <PrivateRoute exact path="/change-password">
+        <PrivateRoute exact path="/change-accountinfo">
           <ChangeAccountInfomation/>    
         </PrivateRoute>
         <PrivateRoute exact path="/team">
@@ -55,7 +55,7 @@ function App() {
         <PrivateRoute exact path="/team/member">
           <Member/>    
         </PrivateRoute>
-        <PrivateRoute exact path="/team/give-tasks">
+        <PrivateRoute exact path="/team/tasks">
           <GiveTasks/>    
         </PrivateRoute>
         <PrivateRoute exact path="/team/tasks-done">

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import NavbarTeam from './../../../components/CenterPage/Team/NavbarTeam';
 import HeaderCenter from './../../../components/CenterPage/Header/HeaderCenter';
-import Footer from './../../../components/AdminPage/Footer/Footer';
+import Footer from './../../../components/Footer';
 import TableDataRowMember from './../../../components/CenterPage/Team/TableDataRowMember';
 import Alert from 'react-bootstrap/Alert'
 import Fade from 'react-reveal/Fade';

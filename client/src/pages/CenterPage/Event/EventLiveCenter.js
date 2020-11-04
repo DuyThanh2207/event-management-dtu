@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import NavbarEvent from './../../../components/AdminPage/Event/NavbarEvent';
-import Footer from './../../../components/AdminPage/Footer/Footer';
+import Navbar from './../../../components/AdminPage/Navbar';
+import Footer from './../../../components/Footer';
 import HeaderCenter from './../../../components/CenterPage/Header/HeaderCenter';
 const axios = require('axios');
 const EventLiveCenter = () => {
@@ -18,7 +18,7 @@ const EventLiveCenter = () => {
     })
     var dataSearch = []
     eventData.forEach((item) => {
-        if (item.event_name.toLowerCase().indexOf(searchText) !== -1 || item.event_place.toLowerCase().indexOf(searchText) !== -1 || item.account_name.toLowerCase().indexOf(searchText) !== -1)
+        if (item.event_name.toLowerCase().indexOf(searchText.toLowerCase()) !== -1 || item.event_place.toLowerCase().indexOf(searchText.toLowerCase()) !== -1 || item.account_name.toLowerCase().indexOf(searchText.toLowerCase()) !== -1)
             dataSearch.push(item)
     })
     const showEvent = () =>
@@ -51,7 +51,7 @@ const EventLiveCenter = () => {
     return (
         <>
             <HeaderCenter/>
-            <NavbarEvent/>
+            <Navbar/>
             <div className="container mt-5">
                 <div className="row d-flex">
                     <div className="col-3 d-flex">
