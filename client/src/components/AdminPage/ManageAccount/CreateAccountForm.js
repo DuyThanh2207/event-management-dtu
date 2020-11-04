@@ -54,7 +54,7 @@ const CreateAccountForm = (props) => {
                     {errors.email && <p>This field is required</p>}
                     <label>Role</label>
                     <select className="form-control" name="role" ref={register}>
-                        <option selected>Choose Role...</option>
+                        <option value = "" selected>Choose Role...</option>
                         <option value="DTU Event Center">DTU Event Center</option>
                         <option value="DTU Event Staff">DTU Event Staff</option>
                     </select>

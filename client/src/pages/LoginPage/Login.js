@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import HeaderLogin from './../../components/LoginPage/HeaderLogin';
-import Footer from './../../components/AdminPage/Footer/Footer';
+import Footer from './../../components/Footer';
 const axios = require('axios');
 const Login = () => {
     const { register, handleSubmit, errors } = useForm();

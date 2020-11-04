@@ -44,11 +44,11 @@
 
             <div class="mr-3 mt-2">
                 <a href="loginpage-Tan" class="d-flex nav-link">
-                    
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10 9.408l2.963 2.592-2.963 2.592v-1.592h-8v-2h8v-1.592zm-2-4.408v4h-8v6h8v4l8-7-8-7zm6-3c-1.787 0-3.46.474-4.911 1.295l.228.2 1.396 1.221c1.004-.456 2.114-.716 3.287-.716 4.411 0 8 3.589 8 8s-3.589 8-8 8c-1.173 0-2.283-.26-3.288-.715l-1.396 1.221-.228.2c1.452.82 3.125 1.294 4.912 1.294 5.522 0 10-4.477 10-10s-4.478-10-10-10z"/></svg>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10 9.408l2.963 2.592-2.963 2.592v-1.592h-8v-2h8v-1.592zm-2-4.408v4h-8v6h8v4l8-7-8-7zm6-3c-1.787 0-3.46.474-4.911 1.295l.228.2 1.396 1.221c1.004-.456 2.114-.716 3.287-.716 4.411 0 8 3.589 8 8s-3.589 8-8 8c-1.173 0-2.283-.26-3.288-.715l-1.396 1.221-.228.2c1.452.82 3.125 1.294 4.912 1.294 5.522 0 10-4.477 10-10s-4.478-10-10-10z"/></svg>
                 </a>
-                Log out       
-            </div> 
+                Log out
+            </div>
 
 
         </div>
@@ -81,177 +81,57 @@
     <div class="container mt-5">
         <div class="row">
             <div class="col">
-                <table class="table">
-                <thead>
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">Task given</th>
-                      <th scope="col">Event name</th>
-                      <th scope="col">Action</th>
-                    </tr>
-                </thead>  
-                <tbody>
-
-                    <tr>
-                      <th scope="row">1</th>
-                        <td>
-                            <div id="accordion">
-                              
-                                
-                                <button class="btn btn-link" data-toggle="collapse" data-target="#Setupplace" aria-expanded="true" aria-controls="Setupplace">
-                                      Set up place
-                                </button>
-                                <div id="Setupplace" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-                                  <div class="card-body">
-                                    <br>
-                                    Employee 4
-                                    </br>
-                                    <br>
-                                    Employee 2
-                                    </br>
-                                    <br>
-                                    Employee 3
-                                    </br>
-                                    <br>
-                                    Employee 1
-                                    </br>
-                                  </div>
-                                </div>
-                              </div>
-                        </td>
-                        <td> 
-                            Event 1
-                            <br>
-                            <br>
-                            Event 2
-                            </br>
-                            <br>
-                            Event 3
-                            </br>
-                        </td>
-                      <td>
-                        <div class="btn-group">
-                            <a href="DTUcenter-givetask.html">
-                                <button type="button" class="btn btn-warning" style="width:80px">Give</button>
-                            </a>
-                            <button type="button" class="btn btn-danger ml-3" style="width:80px">Cancel</button>
+                <div class="accordion" id="accordionExample">
+                    <div class="card">
+                        <div class="card-header" id="headingTwo">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#event1" aria-expanded="false">
+                          Khai Giảng
+                        </button>
+                            </h2>
                         </div>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <th scope="row">2</th>
-
-
-                      <td>
-                        <div id="accordion">
-                          
-                            
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#Checksecurity" aria-expanded="true" aria-controls="Checksecurity">
-                                  Check security
-                            </button>
-                            <div id="Checksecurity" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
-                              <div class="card-body">
-                                <br>
-                                Employee 1
-                                </br>
-                                <br>
-                                Employee 2
-                                </br>
-                                <br>
-                                Employee 3
-                                </br>
-                                <br>
-                                Employee 4
-                                </br>
-                              </div>
+                        <div id="event1" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                            <div class="card-body">
+                                <table class="table">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Task</th>
+                                            <th scope="col">Task Description</th>
+                                            <th scope="col">Staff</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">1</th>
+                                            <td>Mark</td>
+                                            <td>Otto</td>
+                                            <td>
+                                                NV01
+                                                <br> NV02
+                                                <br> NV03
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
-                          </div>
-                      </td>
-                        <td> 
-                            Event 1
-                            <br>
-                            <br>
-                            Event 2
-                            </br>
-                            <br>
-                            Event 3
-                            </br>
-                        </td>
-                      <td>
-                        <div class="btn-group">
-                            <a href="DTUcenter-givetask.html">
-                                <button type="button" class="btn btn-warning" style="width:80px">Give</button>
-                            </a>
-                            <button type="button" class="btn btn-danger ml-3" style="width:80px">Cancel</button>
                         </div>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <th scope="row">3</th>
-                      <td>
-                        <div id="accordion">
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#Checkelectricity" aria-expanded="true" aria-controls="Checkelectricity">
-                                  Check electricity
-                            </button>
-                            <div id="Checkelectricity" class="collapse show" aria-labelledby="headingThree" data-parent="#accordion">
-                              <div class="card-body">
-                                <br>
-                                Employee 1
-                                </br>
-                                <br>
-                                Employee 2
-                                </br>
-                                <br>
-                                Employee 3
-                                </br>
-                                <br>
-                                Employee 4
-                                </br>
-                              </div>
-                            </div>
-                          </div>
-                      </td>
-                        <td> 
-                            Event 1
-                            <br>
-                            <br>
-                            Event 2
-                            </br>
-                            <br>
-                            Event 3
-                            </br>
-                        </td>
-                      <td>
-                        <div class="btn-group">
-                            <a href="DTUcenter-givetask.html">
-                                <button type="button" class="btn btn-warning" style="width:80px">Give</button>
-                            </a>
-                            <button type="button" class="btn btn-danger ml-3" style="width:80px">Cancel</button>
-                        </div>
-                      </td>
-                    </tr>
-
-                    
-                  </tbody>
-                </table>
+                    </div>
+                </div>
             </div>
-            
         </div>
-    </div>
-    <!-- end content -->
+        <!-- end content -->
 
-    <!--Footer-->
-    <nav class="navbar mt-5 justify-content-center" style="background-color: #eeeeee; width: 100%;">
-        Event Management DTU
-    </nav>
-    <!-- End Footer-->
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js " integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo " crossorigin="anonymous "></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js " integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1 " crossorigin="anonymous "></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js " integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM " crossorigin="anonymous "></script>
+        <!--Footer-->
+        <nav class="navbar mt-5 justify-content-center" style="background-color: #eeeeee; width: 100%;">
+            Event Management DTU
+        </nav>
+        <!-- End Footer-->
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js " integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo " crossorigin="anonymous "></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js " integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1 " crossorigin="anonymous "></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js " integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM " crossorigin="anonymous "></script>
 </body>
 
 </html>

@@ -13,7 +13,7 @@ const NavbarTeam = () => {
                                 <NavLink to="/team/member" className="nav-link">MEMBER</NavLink>
                             </li>
                             <li className="nav-item active mr-5">
-                                <NavLink to="/team/give-tasks" className="nav-link">GIVE TASK</NavLink>
+                                <NavLink to="/team/tasks" className="nav-link">TASK</NavLink>
                             </li>
                             <li className="nav-item active mr-5">
                                 <NavLink to="/team/tasks-done" className="nav-link">DONE</NavLink>

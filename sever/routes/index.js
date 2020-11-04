@@ -11,7 +11,7 @@ const connection = mysql.createPool({
 
 /* GET home page. */
 router.get('/account', (req, res) => {
-    connection.query('SELECT * FROM account where account_role not in ("Admin")', (err, response) => {
+    connection.query('SELECT DISTINCT * FROM account where account_role not in ("Admin")', (err, response) => {
         if (err)
             res.send({ message: "Can't show data" });
         else
@@ -25,11 +25,19 @@ router.post('/create-user', (req, res) => {
     const account_password = req.body.account_password
     const account_email = req.body.account_email
     const account_role = req.body.account_role
-    connection.query('INSERT INTO `account` (`account_id`, `account_name`, `account_username`, `account_password`, `account_email`, `account_role`) VALUES (?, ?, ?, ?, ?, ?)', [account_id, account_name, account_username, account_password, account_email, account_role], (err, response) => {
+    connection.query('SELECT DISTINCT account_username, account_email FROM account WHERE account_username = ? or account_email = ?', [account_username, account_email], (err, response) => {
         if (err)
             res.send({ message: "Can't create account" });
-        else
-            res.send(response);
+        else if (response.length > 0)
+            res.send({ message: "Can't create same account username or email" })
+        else {
+            connection.query('INSERT INTO `account` (`account_id`, `account_name`, `account_username`, `account_password`, `account_email`, `account_role`) VALUES (?, ?, ?, ?, ?, ?)', [account_id, account_name, account_username, account_password, account_email, account_role], (err, response) => {
+                if (err)
+                    res.send({ message: "Can't create account" });
+                else
+                    res.send(response);
+            });
+        }
     });
 });
 router.post('/edit-user', (req, res) => {
@@ -38,13 +46,21 @@ router.post('/edit-user', (req, res) => {
     const account_username = req.body.account_username
     const account_email = req.body.account_email
     const account_role = req.body.account_role
-    connection.query('UPDATE `account` SET `account_name` = ?, `account_username` = ?, `account_email` = ?, `account_role` = ? WHERE (`account_id` = ?)', [account_name, account_username, account_email, account_role, account_id], (err, response) => {
+    connection.query('SELECT DISTINCT account_username, account_email FROM account WHERE account_username = ? and account_id not in (?) or account_email = ? and account_id not in (?)', [account_username, account_id, account_email, account_id], (err, response) => {
         if (err)
-            res.send({ message: "Can't edit account" });
-        else
-            res.send(response);
-    });
-});
+            res.send({ message: "Can't create account" });
+        else if (response.length > 0)
+            res.send({ message: "Can't create same account username or email" })
+        else {
+            connection.query('UPDATE `account` SET `account_name` = ?, `account_username` = ?, `account_email` = ?, `account_role` = ? WHERE (`account_id` = ?)', [account_name, account_username, account_email, account_role, account_id], (err, response) => {
+                if (err)
+                    res.send({ message: "Can't edit account" });
+                else
+                    res.send(response);
+            });
+        }
+    })
+})
 router.post('/delete-user', (req, res) => {
     const account_id = req.body.account_id
     connection.query('DELETE FROM `account` WHERE (`account_id` = ?)', [account_id], (err, response) => {
@@ -55,7 +71,7 @@ router.post('/delete-user', (req, res) => {
     });
 });
 router.get('/event', (req, res) => {
-    connection.query('SELECT * FROM event_emd', (err, response) => {
+    connection.query('SELECT DISTINCT * FROM event_emd', (err, response) => {
         if (err)
             res.send({ message: "Can't show data" });
         else
@@ -75,7 +91,7 @@ if (mm < 10) {
 }
 today = dd + '/' + mm + '/' + yyyy;
 router.get('/event-live', (req, res) => {
-    connection.query('SELECT * FROM event_emd where event_date = ?', [today], (err, response) => {
+    connection.query('SELECT DISTINCT * FROM event_emd where event_date > ?', [today], (err, response) => {
         if (err)
             res.send({ message: "Can't show data" });
         else
@@ -83,7 +99,7 @@ router.get('/event-live', (req, res) => {
     });
 });
 router.get('/event-past', (req, res) => {
-    connection.query('SELECT * FROM event_emd where event_date < ?', [today], (err, response) => {
+    connection.query('SELECT DISTINCT * FROM event_emd where event_date < ?', [today], (err, response) => {
         if (err)
             res.send({ message: "Can't show data" });
         else
@@ -94,7 +110,7 @@ router.post('/login', (req, res) => {
     const account_username = req.body.account_username
     const account_password = req.body.account_password
     connection.query(
-        'SELECT * FROM account where account_username = ? and account_password = ?', [account_username, account_password],
+        'SELECT DISTINCT * FROM account where account_username = ? and account_password = ?', [account_username, account_password],
         (error, results) => {
             if (error)
                 res.send({ message: "Wrong username / password !" })
@@ -109,7 +125,7 @@ router.post('/change-password', (req, res) => {
     const old_password = req.body.old_password
     const account_id = req.body.account_id
     connection.query(
-        'SELECT * FROM account where account_id = ? and account_password = ?', [account_id, old_password],
+        'SELECT DISTINCT * FROM account where account_id = ? and account_password = ?', [account_id, old_password],
         (error, results) => {
             if (error)
                 res.send({ message: "Old password is not correct" })
@@ -128,7 +144,7 @@ router.post('/change-password', (req, res) => {
 });
 router.post('/event-center', (req, res) => {
     const account_name = req.body.account_name
-    connection.query('SELECT * FROM event_emd where account_name = ?', [account_name], (err, response) => {
+    connection.query('SELECT DISTINCT * FROM event_emd where account_name = ?', [account_name], (err, response) => {
         if (err)
             res.send({ message: "Can't show data" });
         else
@@ -137,7 +153,7 @@ router.post('/event-center', (req, res) => {
 });
 router.post('/event-live-center', (req, res) => {
     const account_name = req.body.account_name
-    connection.query('SELECT * FROM event_emd where event_date = ? and account_name = ?', [today, account_name], (err, response) => {
+    connection.query('SELECT DISTINCT * FROM event_emd where event_date > ? and account_name = ?', [today, account_name], (err, response) => {
         if (err)
             res.send({ message: "Can't show data" });
         else
@@ -146,7 +162,7 @@ router.post('/event-live-center', (req, res) => {
 });
 router.post('/event-past-center', (req, res) => {
     const account_name = req.body.account_name
-    connection.query('SELECT * FROM event_emd where event_date < ? and account_name = ?', [today, account_name], (err, response) => {
+    connection.query('SELECT DISTINCT * FROM event_emd where event_date < ? and account_name = ?', [today, account_name], (err, response) => {
         if (err)
             res.send({ message: "Can't show data" });
         else
@@ -155,7 +171,7 @@ router.post('/event-past-center', (req, res) => {
 });
 router.post('/member', (req, res) => {
     const account_id = req.body.account_id
-    connection.query('SELECT account_id, account_name, account_email FROM account a, assignment b where a.account_id = b.staff_id and b.center_id = ?', [account_id], (err, response) => {
+    connection.query('SELECT DISTINCT account_id, account_name, account_email FROM account a, assignment b where a.account_id = b.staff_id and b.center_id = ?', [account_id], (err, response) => {
         if (err)
             res.send({ message: "Can't show member" });
         else
@@ -163,7 +179,7 @@ router.post('/member', (req, res) => {
     });
 });
 router.get('/member-all', (req, res) => {
-    connection.query('SELECT account_id, account_name FROM allstaff where center_id is null', (err, response) => {
+    connection.query('SELECT DISTINCT account_id, account_name FROM allstaff where center_id is null', (err, response) => {
         if (err)
             res.send({ message: "Can't show member" });
         if (response.length > 0)
@@ -187,6 +203,37 @@ router.post('/delete-member', (req, res) => {
     connection.query('DELETE FROM assignment WHERE staff_id = ?', [account_staff_id], (err, response) => {
         if (err)
             res.send({ message: "Can't delete member" });
+        else
+            res.send(response);
+    });
+});
+router.post('/tasks-data', (req, res) => {
+    const event_id = req.body.event_id
+    connection.query('SELECT * FROM emd.task where event_id = ?', [event_id], (err, response) => {
+        if (err)
+            res.send({ message: "Can't delete member" });
+        else
+            res.send(response);
+    });
+});
+router.post('/event-task', (req, res) => {
+    const account_id = req.body.account_id
+    connection.query('SELECT DISTINCT a.event_id, b.event_name FROM emd.task a, emd.emd_event b Where a.event_id = b.event_id and a.center_id = ?', [account_id], (err, response) => {
+        if (err)
+            res.send({ message: "Can't show data" });
+        else
+            res.send(response);
+    });
+});
+router.post('/add-task', (req, res) => {
+    const event_id = req.body.event_id
+    const task_name = req.body.task_name
+    const task_description = req.body.task_description
+    const staff_id = req.body.staff_id
+    const center_id = req.body.center_id
+    connection.query('INSERT INTO task (task_name, task_description, event_id, staff_id, center_id) VALUES (?, ?, ?, ?, ?)', [task_name, task_description, event_id, staff_id, center_id], (err, response) => {
+        if (err)
+            res.send({ message: err });
         else
             res.send(response);
     });
