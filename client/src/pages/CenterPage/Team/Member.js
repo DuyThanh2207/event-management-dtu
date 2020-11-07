@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import NavbarTeam from './../../../components/CenterPage/Team/NavbarTeam';
-import HeaderCenter from './../../../components/CenterPage/Header/HeaderCenter';
+import Header from './../../../components/Header';
+import Navbar from './../../../components/CenterPage/Navbar';
 import Footer from './../../../components/Footer';
-import TableDataRowMember from './../../../components/CenterPage/Team/TableDataRowMember';
+import TableDataRowMember from '../../../components/CenterPage/Team/TableDataRowMember';
 import Alert from 'react-bootstrap/Alert'
 import Fade from 'react-reveal/Fade';
 import { confirmAlert } from 'react-confirm-alert';
@@ -115,69 +115,82 @@ const Member = () => {
     ))
     console.log(allMember);
     return (<div>
-        <HeaderCenter />
-        <NavbarTeam/>
-        <div className="container mt-3">
-                <div className="container d-flex justify-content-end">
-                    <div className="btn-group mb-3">
-                        <div className="btn btn-success" onClick = {() => onAddMember()}>Add Member</div>
-                    </div>
-                </div>
-                {memberData.length === 0 ? (<h1  className="container d-flex justify-content-center mb-3">Add some new member</h1>):null}
-                <div className="row">
-                    <div className="col">
-                        <table className="table">
-                            <thead className="thead-dark">
-                                <tr>
-                                    <th scope="col">ID</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {mappingDataUser()}
-                            </tbody>
-                        </table>
-                    </div>
-                    {addStatus ? (
-                        <div className="col-3">
-                            <div className="card" style={{width: "20rem"}}>
-                                <div className="card-body">
-                                    <label>ID Member</label>
-                                    <select id="inputIDMember" defaultValue = "Choose..." className="form-control" onChange = {(e) => onHandleChange(e)}>
-                                        <option>...</option>
-                                        {allMember.length > 0 ? allMember.map((member, index) =>{
-                                            return (
-                                            <option key = {index} value={member.account_id}>{member.account_id}</option>)
-                                        }) : null}
-                                    </select>
-                                    <input className="form-control mt-2" defaultValue={nameMember} disabled="disabled"></input>
-                                    <div className="btn btn-block btn-primary mt-2" onClick = {() => getAddMember()}>Add Member</div>
+        <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
+            <Header />
+            <div className="app-main">
+                <Navbar/>
+                <div className="app-main__outer">
+                    <div className="app-main__inner">
+                        <div className="row">
+                            <div className="container">
+                                <div className="d-flex justify-content-end mb-3" style={{opacity: 1}}>
+                                    <br/>
+                                    {isSuccess ? (
+                                        <Fade right>
+                                            <Alert variant="success">
+                                                {messenger}
+                                            </Alert>
+                                        </Fade>      
+                                    ) : null}  
+                                    {isFailed ? (
+                                        <Fade right>
+                                            <Alert variant="danger">
+                                                {messenger}
+                                            </Alert>
+                                        </Fade>      
+                                    ): null}   
+                                </div>
+                                <div className="d-flex justify-content-center" style={{marginTop: "-20px"}}>
+                                    <h1>Team Member</h1>
+                                </div>
+                                <div className="container d-flex justify-content-end">
+                                    <div className="btn-group mb-3">
+                                        <div className="btn btn-success" onClick = {() => onAddMember()}>Add Member</div>
+                                    </div>
+                                </div>
+                                {memberData.length === 0 ? (<h1  className="container d-flex justify-content-center mb-3">Add some new member</h1>):null}
+                                <div className="row">
+                                    <div className="col">
+                                        <table className="table">
+                                            <thead className="thead-dark">
+                                                <tr>
+                                                    <th scope="col">ID</th>
+                                                    <th scope="col">Name</th>
+                                                    <th scope="col">Email</th>
+                                                    <th scope="col">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {mappingDataUser()}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {addStatus ? (
+                                        <div className="col-3">
+                                            <div className="card" style={{width: "20rem"}}>
+                                                <div className="card-body">
+                                                    <label>ID Member</label>
+                                                    <select id="inputIDMember" defaultValue = "Choose..." className="form-control" onChange = {(e) => onHandleChange(e)}>
+                                                        <option>...</option>
+                                                        {allMember.length > 0 ? allMember.map((member, index) =>{
+                                                            return (
+                                                            <option key = {index} value={member.account_id}>{member.account_id}</option>)
+                                                        }) : null}
+                                                    </select>
+                                                    <input className="form-control mt-2" defaultValue={nameMember} disabled="disabled"></input>
+                                                    <div className="btn btn-block btn-primary mt-2" onClick = {() => getAddMember()}>Add Member</div>
+                                                </div>
+                                            </div>
+                                        </div>  
+                                    ) : null}
                                 </div>
                             </div>
-                        </div>  
-                    ) : null}
+                        </div>
+                        <Footer/>                    
+                    </div>
                 </div>
-            </div>
-            <div className="d-flex justify-content-end mt-5">
-                <br/>
-                {isSuccess ? (
-                    <Fade right>
-                        <Alert variant="success">
-                            {messenger}
-                        </Alert>
-                    </Fade>      
-                ) : null}  
-                {isFailed ? (
-                    <Fade right>
-                        <Alert variant="danger">
-                            {messenger}
-                        </Alert>
-                    </Fade>      
-                ): null}   
-            </div> 
-        <Footer/>
+            </div>       
+        </div>       
     </div>);
 }
 export default Member;

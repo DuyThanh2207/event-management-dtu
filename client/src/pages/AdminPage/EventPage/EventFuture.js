@@ -3,11 +3,11 @@ import Header from './../../../components/Header';
 import Navbar from './../../../components/AdminPage/Navbar';
 import Footer from './../../../components/Footer';
 const axios = require('axios');
-const EventPast = () => {
+const EventFuture = () => {
     const [eventData, setEventData] = useState([]);
     const [searchText, setSearchText] = useState(" ");
     useEffect(() => {
-        axios.post('/event-past').then((res) => {
+        axios.post('/event-future').then((res) => {
             if(res.data.length > 0)
                 setEventData(res.data);
         })
@@ -64,8 +64,8 @@ const EventPast = () => {
                     </div>
                 <Footer/>
             </main>
-        </div>     
+        </div>           
     );
 }
 
-export default EventPast;
+export default EventFuture;

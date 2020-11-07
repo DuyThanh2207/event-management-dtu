@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import Navbar from './../../../components/AdminPage/Navbar';
+import Navbar from './../../../components/CenterPage/Navbar';
 import Footer from './../../../components/Footer';
-import HeaderCenter from './../../../components/CenterPage/Header/HeaderCenter';
+import Header from './../../../components/Header';
 const axios = require('axios');
 const EventAllCenter = () => {
     const [eventData, setEventData] = useState([]);
     const [searchText, setSearchText] = useState(" ");
     useEffect(() => {
         axios.post('/event-center', {
-            account_name: sessionStorage.getItem("account_name")
+            account_id: sessionStorage.getItem("account_id")
         }).then((res) => {
-            setEventData(res.data);
+            console.log(res.data);
+            if(res.data.length > 0)
+                setEventData(res.data);
         })
         .catch((error) => {
             console.log(error);
@@ -42,7 +44,7 @@ const EventAllCenter = () => {
                             Duration: {value.event_duration} Hours
                         </div>
                         <hr />
-                        Event Center: {value.account_name}
+                        Event Center: {value.center_id}
                     </div>
                 </div>
             </div>
@@ -50,19 +52,29 @@ const EventAllCenter = () => {
     )
     return (
         <>
-            <HeaderCenter/>
-            <Navbar/>
-            <div className="container mt-5">
-                <div className="row d-flex">
-                    <div className="col-3 d-flex">
-                        <input type="text" className="form-control" placeholder="Search" onChange = {(e) => setSearchText(e.target.value)}/>
-                    </div>
+            <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
+                <Header/>            
+                <div className="app-main">
+                    <Navbar/>
+                    <div className="app-main__outer">
+                        <div className="app-main__inner">
+                            <div className="row">
+                                <div className="container mt-3 mb-5">
+                                    <div className="row d-flex">
+                                        <div className="col-3 d-flex">
+                                            <input type="text" className="form-control" placeholder="Search" onChange = {(e) => setSearchText(e.target.value)}/>
+                                        </div>
+                                    </div>
+                                    <div className="row ml-5 mb-5">
+                                        {showEvent()}
+                                    </div>
+                                </div>
+                            </div>
+                            <Footer/>
+                        </div>
+                    </div>   
                 </div>
-                <div className="row ml-5 mb-5">
-                    {showEvent()}
-                </div>
-            </div>
-            <Footer/>
+            </div>      
         </>           
     );
 }

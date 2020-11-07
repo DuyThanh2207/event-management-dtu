@@ -6,36 +6,34 @@ import EventPast from './pages/AdminPage/EventPage/EventPast';
 import ManageAccount from './pages/AdminPage/ManageAccount/ManageAccount';
 import ChangeAccountInfomation from './pages/AdminPage/ChangeAccountInformation/ChangeAccountInfomation';
 import Login from './pages/LoginPage/Login';
-import Event from './pages/AdminPage/EventPage/Event';
 import PrivateRoute from './helper/PrivateRouter';
 import PublicRouter from './helper/PublicRouter';
-import EventCenter from './pages/CenterPage/Event/EventCenter';
 import EventAllCenter from './pages/CenterPage/Event/EventAllCenter';
 import EventLiveCenter from './pages/CenterPage/Event/EventLiveCenter';
 import EventPastCenter from './pages/CenterPage/Event/EventPastCenter';
-import Team from './pages/CenterPage/Team/Team';
 import Member from './pages/CenterPage/Team/Member';
-import GiveTasks from './pages/CenterPage/Team/GiveTasks';
-import TaskDone from './pages/CenterPage/Team/TaskDone';
-import TaskNotDone from './pages/CenterPage/Team/TaskNotDone';
-
+import GiveTasks from './pages/CenterPage/Tasks/GiveTasks';
+import TaskDone from './pages/CenterPage/Tasks/TaskDone';
+import TaskNotDone from './pages/CenterPage/Tasks/TaskNotDone';
+import EventFuture from './pages/AdminPage/EventPage/EventFuture';
+import EventFutureCenter from './pages/CenterPage/Event/EventFutureCenter';
 function App() {
   return (
     <Router>
-    <div>
+    <>
       <Switch>
         <PublicRouter exact path="/">
           <Login/>
         </PublicRouter>
         <PrivateRoute exact path="/event">
-          {sessionStorage.getItem("account_role") === "Admin" && <Event />}
-          {sessionStorage.getItem("account_role") === "DTU Event Center" && <EventCenter />}
-        </PrivateRoute>
-        <PrivateRoute exact path="/event-all">
           {sessionStorage.getItem("account_role") === "Admin" && <EventAll/>}
           {sessionStorage.getItem("account_role") === "DTU Event Center" && <EventAllCenter/>}
         </PrivateRoute>
         <PrivateRoute exact path="/event-future">
+          {sessionStorage.getItem("account_role") === "Admin" && <EventFuture/>}
+          {sessionStorage.getItem("account_role") === "DTU Event Center" && <EventFutureCenter/>}
+        </PrivateRoute>
+        <PrivateRoute exact path="/event-live">
           {sessionStorage.getItem("account_role") === "Admin" && <EventLive/> }
           {sessionStorage.getItem("account_role") === "DTU Event Center" && <EventLiveCenter/>}   
         </PrivateRoute>
@@ -50,22 +48,22 @@ function App() {
           <ChangeAccountInfomation/>    
         </PrivateRoute>
         <PrivateRoute exact path="/team">
-          <Team/>    
-        </PrivateRoute>
-        <PrivateRoute exact path="/team/member">
           <Member/>    
         </PrivateRoute>
-        <PrivateRoute exact path="/team/tasks">
+        <PrivateRoute exact path="/task-all">
           <GiveTasks/>    
         </PrivateRoute>
-        <PrivateRoute exact path="/team/tasks-done">
+        <PrivateRoute exact path="/task-done">
           <TaskDone/>    
         </PrivateRoute>
-        <PrivateRoute exact path="/team/tasks-not-done">
+        <PrivateRoute exact path="/task-in-process">
           <TaskNotDone/>    
         </PrivateRoute>
+        <PrivateRoute exact path="/task-fail">
+          {/* <TaskNotDone/>     */}
+        </PrivateRoute>
       </Switch>
-    </div>
+    </>
   </Router>
   );
 } 
