@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { useHistory } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import HeaderLogin from './../../components/LoginPage/HeaderLogin';
 import Footer from './../../components/Footer';
+import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn } from 'mdbreact';
 const axios = require('axios');
 const Login = () => {
-    const { register, handleSubmit, errors } = useForm();
     const [isFail, setIsFail] = useState(false);
+    const [userName, setUserName] = useState();
+    const [password, setPassword] = useState();
     let history = useHistory();
-    const onClickHandler = (data) => {
+    const onClickHandler = () => {
         axios.post('/login', {
-            account_username: data.userName,
-            account_password: data.password,
+            account_username: userName,
+            account_password: password,
           })
           .then((res) => {
             if(res.data.message){
@@ -42,7 +42,6 @@ const Login = () => {
     }
     return (
         <div>
-            <HeaderLogin/>
             <div className="container">
                 <div className="row">
                     <div className="col-8">
@@ -53,46 +52,58 @@ const Login = () => {
                             <h1 style={{color:"#a3312e"}}>Event Management DTU</h1>
                         </div>
                     </div>
-                    <div className="col-4 mt-5">
-                        <div className="card mr-5 mt-5"  style={{height: '350px'}}>
+                    <div className="col-4" style={{marginTop:"80px"}}>
+                        <div className="card mr-5 mt-5">
                             <div className="card-header ">
                                 <h3>Sign in</h3>
                             </div>
                             <div className="card-body ml-3 mr-3">
-                                <form onSubmit={handleSubmit(onClickHandler)}>
-                                    <div className="mb-5">
-                                        <h4>Username</h4>
-                                        <div className="d-flex mt-3">
-                                            <div className="input-group-prepend">
-                                                <span className="input-group-text"><i className="fas fa-user" /></span>
+                                <MDBContainer>
+                                    <MDBRow>
+                                        <MDBCol>
+                                        <form>
+                                            <div className="grey-text">
+                                            <MDBInput label="Type your username" icon="envelope" group type="text" validate required name="userName" onChange = {(e) => setUserName(e.target.value)}/>
+                                            <MDBInput label="Type your password" icon="lock" group type="password" validate required name="password" onChange = {(e) => setPassword(e.target.value)}/>
                                             </div>
-                                            <br/>                         
-                                            <input
-                                                className="form-control"
-                                                name="userName"
-                                                type="text"
-                                                ref={register({required: true})}
-                                            />
-                                            {errors.userName && <p>This field is required</p>}
-                                        </div>
-                                    </div>                            
-                                    <h4>Password</h4>
+                                            <div className="text-center" onClick = {() => onClickHandler()}>
+                                                <MDBBtn>Login</MDBBtn>      
+                                            </div>
+                                        </form>
+                                        </MDBCol>
+                                    </MDBRow>
+                                    </MDBContainer>
+                                {/* <div className="mb-5">
+                                    <h4>Username</h4>
                                     <div className="d-flex mt-3">
                                         <div className="input-group-prepend">
-                                            <span className="input-group-text"><i className="fas fa-key" /></span>
-                                        </div> 
-                                        <br/>  
+                                            <span className="input-group-text"><i className="fas fa-user" /></span>
+                                        </div>
+                                        <br/>                         
                                         <input
                                             className="form-control"
-                                            name="password"
-                                            type="password"
+                                            name="userName"
+                                            type="text"
                                             ref={register({required: true})}
                                         />
-                                        {errors.password && <p>This field is required</p>}
+                                        {errors.userName && <p>This field is required</p>}
                                     </div>
-                                    {isFail ? (<p className="mt-2"> Wrong Username / password  </p>):null}
-                                    <input type="submit" value="Login" className="btn btn-block btn-primary mt-5"/>
-                                </form>
+                                </div>                            
+                                <h4>Password</h4>
+                                <div className="d-flex mt-3">
+                                    <div className="input-group-prepend">
+                                        <span className="input-group-text"><i className="fas fa-key" /></span>
+                                    </div> 
+                                    <br/>  
+                                    <input
+                                        className="form-control"
+                                        name="password"
+                                        type="password"
+                                        ref={register({required: true})}
+                                    />
+                                    {errors.password && <p>This field is required</p>}
+                                </div> */}
+                                {isFail ? (<p className="mt-2 d-flex justify-content-center"> Wrong Username / password  </p>):null}
                             </div>
                         </div>
                     </div>

@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import Header from './../../../components/Header';
-import Navbar from './../../../components/AdminPage/Navbar';
+import Navbar from './../../../components/CenterPage/Navbar';
 import Footer from './../../../components/Footer';
 const axios = require('axios');
-const EventPast = () => {
+const EventFutureCenter = () => {
     const [eventData, setEventData] = useState([]);
     const [searchText, setSearchText] = useState(" ");
     useEffect(() => {
-        axios.post('/event-past').then((res) => {
+        axios.post('/event-future-center', {
+            account_id: sessionStorage.getItem("account_id")
+        }).then((res) => {
             if(res.data.length > 0)
                 setEventData(res.data);
         })
         .catch((error) => {
             console.log(error);
         })
-    },[])
+    })
     var dataSearch = []
     eventData.forEach((item) => {
-        if (item.event_name.toLowerCase().indexOf(searchText.toLowerCase()) !== -1 || item.event_place.toLowerCase().indexOf(searchText.toLowerCase()) !== -1 || item.center_id.toLowerCase().indexOf(searchText.toLowerCase()) !== -1)
+        if (item.event_name.toLowerCase().indexOf(searchText.toLowerCase()) !== -1 || item.event_place.toLowerCase().indexOf(searchText.toLowerCase()) !== -1 || item.account_name.toLowerCase().indexOf(searchText.toLowerCase()) !== -1)
             dataSearch.push(item)
     })
     const showEvent = () =>
@@ -48,24 +50,32 @@ const EventPast = () => {
         )   
     )
     return (
-        <div className="app">
-            <Navbar/>
-            <main>
-                <Header/>
-                    <div className="container mt-3 mb-5">
-                        <div className="row d-flex">
-                            <div className="col-3 d-flex">
-                                <input type="text" className="form-control" placeholder="Search" onChange = {(e) => setSearchText(e.target.value)}/>
+        <>
+            <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
+                <Header/>            
+                <div className="app-main">
+                    <Navbar/>
+                    <div className="app-main__outer">
+                        <div className="app-main__inner">
+                            <div className="row">
+                                <div className="container mt-3 mb-5">
+                                    <div className="row d-flex">
+                                        <div className="col-3 d-flex">
+                                            <input type="text" className="form-control" placeholder="Search" onChange = {(e) => setSearchText(e.target.value)}/>
+                                        </div>
+                                    </div>
+                                    <div className="row ml-5 mb-5">
+                                        {showEvent()}
+                                    </div>
+                                </div>
                             </div>
+                            <Footer/>
                         </div>
-                        <div className="row ml-5 mb-5">
-                            {showEvent()}
-                        </div>
-                    </div>
-                <Footer/>
-            </main>
-        </div>     
+                    </div>   
+                </div>
+            </div>
+        </>           
     );
 }
 
-export default EventPast;
+export default EventFutureCenter;
