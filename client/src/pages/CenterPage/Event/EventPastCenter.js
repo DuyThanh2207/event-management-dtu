@@ -16,7 +16,7 @@ const EventPastCenter = () => {
         .catch((error) => {
             console.log(error);
         })
-    })
+    },[])
     var dataSearch = []
     eventData.forEach((item) => {
         if (item.event_name.toLowerCase().indexOf(searchText.toLowerCase()) !== -1 || item.event_place.toLowerCase().indexOf(searchText.toLowerCase()) !== -1 || item.account_name.toLowerCase().indexOf(searchText.toLowerCase()) !== -1)
@@ -50,31 +50,23 @@ const EventPastCenter = () => {
         )   
     )
     return (
-        <>
-            <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
-                <Header/>            
-                <div className="app-main">
-                    <Navbar/>
-                    <div className="app-main__outer">
-                        <div className="app-main__inner">
-                            <div className="row">
-                                <div className="container mt-3 mb-5">
-                                    <div className="row d-flex">
-                                        <div className="col-3 d-flex">
-                                            <input type="text" className="form-control" placeholder="Search" onChange = {(e) => setSearchText(e.target.value)}/>
-                                        </div>
-                                    </div>
-                                    <div className="row ml-5 mb-5">
-                                        {showEvent()}
-                                    </div>
-                                </div>
-                            </div>
-                            <Footer/>
+        <div className="app">
+            <Navbar/>
+            <main>
+                <Header/>
+                <div className="container mt-3 mb-5">
+                    <div className="row d-flex">
+                        <div className="col-3 d-flex">
+                            <input type="text" className="form-control" placeholder="Search" onChange = {(e) => setSearchText(e.target.value)}/>
                         </div>
-                    </div>   
+                    </div>
+                    <div className="row ml-5 mb-5">
+                        {showEvent()}
+                    </div>
                 </div>
-            </div>      
-        </>           
+                <Footer/>
+            </main>
+        </div>                   
     );
 }
 

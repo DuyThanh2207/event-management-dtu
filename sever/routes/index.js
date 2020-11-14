@@ -165,7 +165,7 @@ router.post('/event-center', (req, res) => {
     const datetimeformat = "%d-%m-%Y"
     const account_id = req.body.account_id
     const timeFormat = "%H:%i:%s"
-    connection.query('SELECT DISTINCT event_id, event_name, event_place, DATE_FORMAT(event_date, ?) as event_date, DATE_FORMAT(event_date, ?) as event_time, event_duration, event_description, center_id  FROM emd_event where center_id = ?', [datetimeformat, timeFormat, account_id], (err, response) => {
+    connection.query('SELECT DISTINCT event_id, event_name, event_place, event_date as time, DATE_FORMAT(event_date, ?) as event_date, DATE_FORMAT(event_date, ?) as event_time, event_duration, event_description, center_id  FROM emd_event where center_id = ?', [datetimeformat, timeFormat, account_id], (err, response) => {
         if (err)
             res.send({ message: "Can't show data" });
         else
@@ -276,6 +276,252 @@ router.post('/add-task', (req, res) => {
     connection.query('INSERT INTO task (task_name, task_description, deadline, status, event_id, staff_id, center_id) VALUES (?, ?, ?, ?, ?, ?, ?)', [task_name, task_description, deadline, status, event_id, staff_id, center_id], (err, response) => {
         if (err)
             res.send({ message: err });
+        else
+            res.send(response);
+    });
+});
+router.post('/edit-task', (req, res) => {
+    const task_name = req.body.task_name
+    const task_description = req.body.task_description
+    const staff_id = req.body.staff_id
+    const deadline = req.body.deadline
+    const task_id = req.body.task_id
+    connection.query("UPDATE task SET task_name = ?, task_description = ?, deadline = ?, staff_id = ? WHERE (task_id = ?)", [task_name, task_description, deadline, staff_id, task_id], (err, response) => {
+        if (err)
+            res.send({ message: err });
+        else
+            res.send(response);
+    });
+});
+router.post('/delete-task', (req, res) => {
+    const task_id = req.body.task_id
+    connection.query("DELETE FROM task WHERE (task_id = ?)", [task_id], (err, response) => {
+        if (err)
+            res.send({ message: err });
+        else
+            res.send(response);
+    });
+});
+router.post('/task-done', (req, res) => {
+    const event_id = req.body.event_id
+    const status = "Done"
+    const timeFormat = "%d-%m-%Y"
+    connection.query('SELECT task_id, task_name, task_description, DATE_FORMAT(deadline, ?) as deadline, status, staff_id FROM emd.task where event_id = ? and status = ?', [timeFormat, event_id, status], (err, response) => {
+        if (err)
+            res.send({ message: err });
+        else
+            res.send(response);
+    });
+});
+router.post('/task-not-done', (req, res) => {
+    const event_id = req.body.event_id
+    const status = "In Process"
+    const timeFormat = "%d-%m-%Y"
+    connection.query('SELECT task_id, task_name, task_description, DATE_FORMAT(deadline, ?) as deadline, status, staff_id FROM emd.task where event_id = ? and status = ?', [timeFormat, event_id, status], (err, response) => {
+        if (err)
+            res.send({ message: err });
+        else
+            res.send(response);
+    });
+});
+router.post('/task-fail', (req, res) => {
+    const event_id = req.body.event_id
+    const status = "Fail"
+    const timeFormat = "%d-%m-%Y"
+    connection.query('SELECT task_id, task_name, task_description, DATE_FORMAT(deadline, ?) as deadline, status, staff_id FROM emd.task where event_id = ? and status = ?', [timeFormat, event_id, status], (err, response) => {
+        if (err)
+            res.send({ message: err });
+        else
+            res.send(response);
+    });
+});
+router.post('/check-task', (req, res) => {
+    const datetime = "%Y-%m-%d"
+    const status = "Fail"
+    const inProcess = "In Process"
+    connection.query('UPDATE task SET status = ? where DATE_FORMAT(deadline, ?) < ? and status = ?', [status, datetime, today, inProcess], (err, response) => {
+        if (err)
+            res.send({ message: err })
+        else
+            res.send(response);
+    });
+});
+router.post('/add-event', (req, res) => {
+    const event_name = req.body.event_name
+    const event_place = req.body.event_place
+    const event_date = req.body.event_date
+    const event_duration = req.body.event_duration
+    const event_description = req.body.event_description
+    const center_id = req.body.center_id
+    connection.query('INSERT INTO emd_event (event_name, event_place, event_date, event_duration, event_description, center_id) VALUES (?, ?, ?, ?, ?, ?)', [event_name, event_place, event_date, event_duration, event_description, center_id], (err, response) => {
+        if (err)
+            res.send({ message: err });
+        else
+            res.send(response);
+    });
+});
+router.post('/edit-event', (req, res) => {
+    const event_id = req.body.event_id
+    const event_name = req.body.event_name
+    const event_place = req.body.event_place
+    const event_date = req.body.event_date
+    const event_duration = req.body.event_duration
+    const event_description = req.body.event_description
+    connection.query('UPDATE emd_event SET event_name = ?, event_place = ?, event_date = ?, event_duration = ?, event_description = ? WHERE event_id = ?', [event_name, event_place, event_date, event_duration, event_description, event_id], (err, response) => {
+        if (err)
+            res.send({ message: err });
+        else
+            res.send(response);
+    });
+});
+router.post('/delete-event', (req, res) => {
+    const event_id = req.body.event_id
+    connection.query("DELETE FROM emd_event WHERE (event_id = ?)", [event_id], (err, response) => {
+        if (err)
+            res.send({ message: err });
+        else
+            res.send(response);
+    });
+});
+router.post('/event-center-available', (req, res) => {
+    const datetimeformat = "%d-%m-%Y"
+    const datetime = "%Y-%m-%d"
+    const account_id = req.body.account_id
+    const timeFormat = "%H:%i:%s"
+    connection.query('SELECT DISTINCT event_id, event_name, event_place, event_date as time, DATE_FORMAT(event_date, ?) as event_date, DATE_FORMAT(event_date, ?) as event_time, event_duration, event_description, center_id  FROM emd_event where center_id = ? and DATE_FORMAT(event_date, ?) >= ?', [datetimeformat, timeFormat, account_id, datetime, today], (err, response) => {
+        if (err)
+            res.send({ message: "Can't show data" });
+        else
+            res.send(response);
+    });
+});
+router.post('/event-center-unavailable', (req, res) => {
+    const datetimeformat = "%d-%m-%Y"
+    const datetime = "%Y-%m-%d"
+    const account_id = req.body.account_id
+    const timeFormat = "%H:%i:%s"
+    connection.query('SELECT DISTINCT event_id, event_name, event_place, event_date as time, DATE_FORMAT(event_date, ?) as event_date, DATE_FORMAT(event_date, ?) as event_time, event_duration, event_description, center_id  FROM emd_event where center_id = ? and DATE_FORMAT(event_date, ?) < ?', [datetimeformat, timeFormat, account_id, datetime, today], (err, response) => {
+        if (err)
+            res.send({ message: "Can't show data" });
+        else
+            res.send(response);
+    });
+});
+router.post('/show', (req, res) => {
+    const event_id = req.body.event_id
+    connection.query('SELECT DISTINCT * FROM event_show WHERE event_id = ?', [event_id], (err, response) => {
+        if (err)
+            res.send({ message: "Can't show data" });
+        else
+            res.send(response);
+    });
+});
+router.post('/add-show', (req, res) => {
+    const event_id = req.body.event_id
+    const show_name = req.body.show_name
+    const show_duration = req.body.show_duration
+    const show_speaker = req.body.show_speaker
+    connection.query('INSERT INTO event_show (event_id, show_name, show_duration, show_speaker) VALUES (?, ?, ?, ?)', [event_id, show_name, show_duration, show_speaker], (err, response) => {
+        if (err)
+            res.send({ message: err });
+        else
+            res.send(response);
+    });
+});
+router.post('/edit-show', (req, res) => {
+    const id = req.body.id
+    const show_name = req.body.show_name
+    const show_duration = req.body.show_duration
+    const show_speaker = req.body.show_speaker
+    connection.query('UPDATE event_show SET show_name = ?, show_duration = ?, show_speaker = ? WHERE id = ?', [show_name, show_duration, show_speaker, id], (err, response) => {
+        if (err)
+            res.send({ message: err });
+        else
+            res.send(response);
+    });
+});
+router.post('/delete-show', (req, res) => {
+    const id = req.body.id
+    connection.query("DELETE FROM event_show WHERE (id = ?)", [id], (err, response) => {
+        if (err)
+            res.send({ message: err });
+        else
+            res.send(response);
+    });
+});
+router.post('/finance', (req, res) => {
+    const event_id = req.body.event_id
+    connection.query('SELECT DISTINCT * FROM finance WHERE event_id = ?', [event_id], (err, response) => {
+        if (err)
+            res.send({ message: "Can't show data" });
+        else
+            res.send(response);
+    });
+});
+router.post('/add-finance', (req, res) => {
+    const event_id = req.body.event_id;
+    const finance_spending_description = req.body.finance_spending_description
+    const finance_spending = req.body.finance_spending
+    connection.query('INSERT INTO finance (event_id, finance_spending_description, finance_spending) VALUES (?, ?, ?)', [event_id, finance_spending_description, finance_spending], (err, response) => {
+        if (err)
+            res.send({ message: err });
+        else
+            res.send(response);
+    });
+});
+router.post('/edit-finance', (req, res) => {
+    const id = req.body.id
+    const finance_spending_description = req.body.finance_spending_description
+    const finance_spending = req.body.finance_spending
+    connection.query('UPDATE finance SET finance_spending_description = ?, finance_spending = ? WHERE id = ?', [finance_spending_description, finance_spending, id], (err, response) => {
+        if (err)
+            res.send({ message: err });
+        else
+            res.send(response);
+    });
+});
+router.post('/delete-finance', (req, res) => {
+    const id = req.body.id
+    connection.query("DELETE FROM finance WHERE (id = ?)", [id], (err, response) => {
+        if (err)
+            res.send({ message: err });
+        else
+            res.send(response);
+    });
+});
+router.post('/finance-center', (req, res) => {
+    const center_id = req.body.center_id
+    connection.query('Select distinct b.event_name, finance_spending_description, finance_spending from finance a, emd_event b Where a.event_id = b.event_id and b.center_id = ?', [center_id], (err, response) => {
+        if (err)
+            res.send({ message: "Can't show data" });
+        else
+            res.send(response);
+    });
+});
+router.post('/finance-profit', (req, res) => {
+    const center_id = req.body.center_id
+    connection.query('Select distinct b.event_name, sum(finance_spending) as profit from finance a, emd_event b Where a.event_id = b.event_id and b.center_id = ? Group by (b.event_name)', [center_id], (err, response) => {
+        if (err)
+            res.send({ message: "Can't show data" });
+        else
+            res.send(response);
+    });
+});
+router.post('/finance-chart', (req, res) => {
+    const center_id = req.body.center_id
+    connection.query('Select distinct b.event_id, b.event_name from finance a, emd_event b Where a.event_id = b.event_id and b.center_id = ?', [center_id], (err, response) => {
+        if (err)
+            res.send({ message: "Can't show data" });
+        else
+            res.send(response);
+    });
+});
+router.post('/chart', (req, res) => {
+    const event_id = req.body.event_id
+    const center_id = req.body.center_id
+    connection.query('Select distinct finance_spending_description, finance_spending from finance a, emd_event b Where a.event_id = b.event_id and b.center_id = ? and a.event_id = ?', [center_id, event_id], (err, response) => {
+        if (err)
+            res.send({ message: "Can't show data" });
         else
             res.send(response);
     });

@@ -29,7 +29,7 @@ const AddTask = (props) => {
         .catch((error) => {
             console.log(error);
         })
-    })
+    },[])
     const getCreateAccount = (data) => {
         let tempData = staffTask.join(', ')
         var today = new Date(selectedDate);
@@ -39,9 +39,10 @@ const AddTask = (props) => {
         today = yyyy + '-' + mm + '-' + dd;
         let temp = {...data, staff_id: tempData, deadline: today}
         props.getAddTaskData(temp)
+        props.changeAddStatus()
     }
     return (
-        <div className="card col-3" style={{width: '100%'}}>
+        <div className="card" style={{width: '100%'}}>
             <div className="card-body">
                 <form onSubmit={handleSubmit(getCreateAccount)}>
                     <label>Task Name</label>

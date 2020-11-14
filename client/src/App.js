@@ -17,6 +17,14 @@ import TaskDone from './pages/CenterPage/Tasks/TaskDone';
 import TaskNotDone from './pages/CenterPage/Tasks/TaskNotDone';
 import EventFuture from './pages/AdminPage/EventPage/EventFuture';
 import EventFutureCenter from './pages/CenterPage/Event/EventFutureCenter';
+import '@fortawesome/fontawesome-free/css/all.min.css'; 
+import 'bootstrap-css-only/css/bootstrap.min.css'; 
+import 'mdbreact/dist/css/mdb.css';
+import TaskFail from './pages/CenterPage/Tasks/TaskFail';
+import CreateEvent from './pages/CenterPage/Personal/CreateEvent';
+import Finance from './pages/CenterPage/Personal/Finance';
+import Chart from './pages/CenterPage/Personal/Chart';
+import ChangePassword from './pages/CenterPage/ChangeAccountInformation/ChangePassword';
 function App() {
   return (
     <Router>
@@ -44,8 +52,9 @@ function App() {
         <PrivateRoute exact path="/manage-account">
           <ManageAccount/>
         </PrivateRoute>
-        <PrivateRoute exact path="/change-accountinfo">
-          <ChangeAccountInfomation/>    
+        <PrivateRoute exact path="/change-password">
+          {sessionStorage.getItem("account_role") === "Admin" && <ChangeAccountInfomation/>   }
+          {sessionStorage.getItem("account_role") === "DTU Event Center" && <ChangePassword/>}       
         </PrivateRoute>
         <PrivateRoute exact path="/team">
           <Member/>    
@@ -60,7 +69,16 @@ function App() {
           <TaskNotDone/>    
         </PrivateRoute>
         <PrivateRoute exact path="/task-fail">
-          {/* <TaskNotDone/>     */}
+          <TaskFail/>    
+        </PrivateRoute>
+        <PrivateRoute exact path="/create-event">
+          <CreateEvent/> 
+        </PrivateRoute>
+        <PrivateRoute exact path="/finance">
+          <Finance/>
+        </PrivateRoute>
+        <PrivateRoute exact path="/chart">
+          <Chart/>
         </PrivateRoute>
       </Switch>
     </>

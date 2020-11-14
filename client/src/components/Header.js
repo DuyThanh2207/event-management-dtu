@@ -17,20 +17,20 @@ const Header = () => {
             <div></div>
             <h4 className="mt-3">Event Management</h4>
             <MDBDropdown size="sm">
-                <MDBDropdownToggle caret color="dark" style={{borderRadius:"50%", height: "60px"}}>
+                <MDBDropdownToggle caret color="dark" style={{borderRadius:"50%", height: "45px", width: "45px"}}>
                     <FaceIcon/>
                 </MDBDropdownToggle>
                 <MDBDropdownMenu basic>
                     {sessionStorage.getItem("account_role") !== "Admin" && (
                         <MDBDropdownItem>
-                            <NavLink className="d-flex" to="/account-details">
+                            <NavLink className="d-flex" to="/account-details" activeStyle={{fontWeight: "bold", color: "red"}} style={{color:"black"}}>
                                 <PermContactCalendarIcon/> 
                                 <div className="ml-2">Account Details</div>
                             </NavLink>
                         </MDBDropdownItem>                       
                     )}
                     <MDBDropdownItem>
-                        <NavLink className="d-flex" to="/change-accountinfo">
+                        <NavLink className="d-flex" activeStyle={{fontWeight: "bold", color: "red"}}to="/change-password" style={{color:"black"}}>
                             <EditIcon/> 
                             <div className="ml-2">Change Password</div>
                         </NavLink>
