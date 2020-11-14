@@ -12,7 +12,7 @@ import './GiveTask.css'
 import ListSubheader from '@material-ui/core/ListSubheader';
 import Spinner from 'react-bootstrap/Spinner'
 const axios = require('axios');
-const TaskDone = () => {
+const TaskFail = () => {
     const [taskData, setTaskData] = useState([]);
     const [eventDataAvailable, setEventDataAvailable] = useState([]);
     const [eventDataUnavailable, setEventDataUnavailable] = useState([]);
@@ -53,7 +53,7 @@ const TaskDone = () => {
     const onHandledClick = (e) => {
         setLoading(true)
         setTimeout(async () =>  {
-            const data = await axios.post('/task-done', {
+            const data = await axios.post('/task-fail', {
                 event_id: e.event_id
             }).then((res) => {
                 if(res.data.length > 0)
@@ -142,4 +142,4 @@ const TaskDone = () => {
         </>                
     );
 }
-export default TaskDone;
+export default TaskFail;

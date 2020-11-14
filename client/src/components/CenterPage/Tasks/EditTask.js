@@ -14,8 +14,8 @@ const axios = require('axios');
 const EditTask = (props) => {
     const [staffData, setStaffData] = useState([]);
     const { register, handleSubmit, errors } = useForm();
-    const [staffTask, setStaffTask] = useState([]);
-    const [selectedDate, setSelectedDate] = useState(new Date());    
+    const [staffTemp, setStaffTemp] = useState(props.editData.staff_id.split(', '));
+    const [dateEdit, setDateEdit] = useState();
     var staffId = []
     useEffect(() => {
         axios.post('/member', {
@@ -29,28 +29,39 @@ const EditTask = (props) => {
         .catch((error) => {
             console.log(error);
         })
-    })
-    const getCreateAccount = (data) => {
-        let tempData = staffTask.join(', ')
-        var today = new Date(selectedDate);
+        getDateEdit()
+    },[])
+    const getEditAccount = (data) => {
+        let tempData = staffTemp.join(', ')
+        var today = new Date(dateEdit);
         var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var mm = String(today.getMonth() + 1).padStart(2, '0');
         var yyyy = today.getFullYear();
         today = yyyy + '-' + mm + '-' + dd;
-        let temp = {...data, staff_id: tempData, deadline: today}
-        props.getAddTaskData(temp)
+        var taskID = props.editData.task_id
+        let temp = {...data, task_id: taskID, staff_id: tempData, deadline: today}
+        props.getEditTaskData(temp);
     }
-    console.log(props.editData);
+    const getDateEdit = () => {
+        var temp = props.editData.deadline.replaceAll("-", ",");
+        var dateTemp = temp.split(",");
+        var dd = dateTemp[0]
+        var mm = dateTemp[1]
+        var yyyy = dateTemp[2]
+        var today = yyyy + ',' + mm + ',' + dd;
+        var date = new Date(today)
+        setDateEdit(date);
+    }
     return (
-        <div className="card col-3" style={{width: '100%'}}>
+        <div className="card" style={{width: '100%'}}>
             <div className="card-body">
-                <form onSubmit={handleSubmit(getCreateAccount)}>
+                <form onSubmit={handleSubmit(getEditAccount)}>
                     <label>Task Name</label>
                     <input
                         className="form-control"
                         name="task_name"
                         type="text"
-                        value={props.editData.task_name}
+                        defaultValue={props.editData.task_name}
                         ref={register({required: true})}
                     />
                     {errors.task_name && <p>This field is required</p>}
@@ -71,8 +82,8 @@ const EditTask = (props) => {
                             margin="normal"
                             id="date-picker-inline"
                             label="Deadline"
-                            value={selectedDate}
-                            onChange={value => setSelectedDate(value)}
+                            value={dateEdit}
+                            onChange={value => setDateEdit(value)}
                             KeyboardButtonProps={{
                                 'aria-label': 'change date',
                             }}
@@ -81,10 +92,12 @@ const EditTask = (props) => {
                     </MuiPickersUtilsProvider>
                     <label>Staff</label>
                     <Multiselect
+                        value={staffTemp}
                         data={staffData}
-                        onChange={value =>setStaffTask(value)}
+                        onChange={value =>setStaffTemp(value)}
                     />
-                    <input type="submit" value="Edit Task" className="btn btn-primary btn-block mt-4"/>
+                    <input type="submit" value="Edit Task" className="btn btn-warning btn-block mt-4"/>
+                    <div className="btn btn-danger btn-block mt-4" onClick={() => props.changeEditStatus()}>Cancel</div>
                 </form>
             </div>
         </div>

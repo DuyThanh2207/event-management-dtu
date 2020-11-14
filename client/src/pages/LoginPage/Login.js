@@ -63,8 +63,8 @@ const Login = () => {
                                         <MDBCol>
                                         <form>
                                             <div className="grey-text">
-                                            <MDBInput label="Type your username" icon="envelope" group type="text" validate required name="userName" onChange = {(e) => setUserName(e.target.value)}/>
-                                            <MDBInput label="Type your password" icon="lock" group type="password" validate required name="password" onChange = {(e) => setPassword(e.target.value)}/>
+                                            <MDBInput label="Type your username" icon="envelope" group type="text" validate name="userName" onChange = {(e) => setUserName(e.target.value)} required/>
+                                            <MDBInput label="Type your password" icon="lock" group type="password" validate name="password" onChange = {(e) => setPassword(e.target.value)} required/>
                                             </div>
                                             <div className="text-center" onClick = {() => onClickHandler()}>
                                                 <MDBBtn>Login</MDBBtn>      
