@@ -25,6 +25,7 @@ import CreateEvent from './pages/CenterPage/Personal/CreateEvent';
 import Finance from './pages/CenterPage/Personal/Finance';
 import Chart from './pages/CenterPage/Personal/Chart';
 import ChangePassword from './pages/CenterPage/ChangeAccountInformation/ChangePassword';
+import DetailsAccount from './pages/CenterPage/ChangeAccountInformation/DetailsAccount';
 function App() {
   return (
     <Router>
@@ -79,6 +80,9 @@ function App() {
         </PrivateRoute>
         <PrivateRoute exact path="/chart">
           <Chart/>
+        </PrivateRoute>
+        <PrivateRoute exact path="/account-details">
+          <DetailsAccount/>
         </PrivateRoute>
       </Switch>
     </>
