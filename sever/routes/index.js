@@ -526,4 +526,24 @@ router.post('/chart', (req, res) => {
             res.send(response);
     });
 });
+router.post('/account-details', (req, res) => {
+    const account_id = req.body.account_id
+    connection.query('SELECT DISTINCT account_name, account_email FROM emd.account where account_id = ?', [account_id], (err, response) => {
+        if (err)
+            res.send({ message: "Can't show data" });
+        else
+            res.send(response);
+    });
+});
+router.post('/edit-account-details', (req, res) => {
+    const account_id = req.body.account_id
+    const account_name = req.body.account_name
+    const account_email = req.body.account_email
+    connection.query('UPDATE account SET account_name = ?, account_email = ? where account_id = ?', [account_name, account_email, account_id], (err, response) => {
+        if (err)
+            res.send({ message: "Can't update account" });
+        else
+            res.send(response);
+    });
+});
 module.exports = router;
