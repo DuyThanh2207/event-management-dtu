@@ -61,23 +61,6 @@ const Navbar = (props) => {
                             <MenuItem active = {true}>                 
                                 <NavLink to="/event" activeStyle={{fontWeight: "bold"}}>Event All</NavLink>
                             </MenuItem>
-                            <MenuItem>                         
-                                <NavLink to="/event-live" activeStyle={{fontWeight: "bold"}}>Event Live</NavLink>
-                            </MenuItem>
-                            <MenuItem>                              
-                                <NavLink to="/event-past" activeStyle={{fontWeight: "bold"}}>Event Past</NavLink>
-                            </MenuItem>
-                            <MenuItem>                         
-                                <NavLink to="/event-future" activeStyle={{fontWeight: "bold"}}>Event Future</NavLink>
-                            </MenuItem>
-                        </SubMenu>
-                        <SubMenu
-                            title="Team Member"
-                            icon={<SupervisorAccountIcon />}
-                        >
-                            <MenuItem active = {true}>                 
-                                <NavLink activeStyle={{fontWeight: "bold"}} to="/team">Member</NavLink>
-                            </MenuItem>
                         </SubMenu>
                         <SubMenu
                             title="Task"
@@ -85,29 +68,6 @@ const Navbar = (props) => {
                         >
                             <MenuItem active = {true}>                 
                                 <NavLink activeStyle={{fontWeight: "bold"}} to="/task-all">All</NavLink>
-                            </MenuItem>
-                            <MenuItem>                 
-                                <NavLink activeStyle={{fontWeight: "bold"}} to="/task-done">Done</NavLink>
-                            </MenuItem>
-                            <MenuItem>                 
-                                <NavLink activeStyle={{fontWeight: "bold"}} to="/task-in-process">In Process</NavLink>
-                            </MenuItem>
-                            <MenuItem>                 
-                                <NavLink activeStyle={{fontWeight: "bold"}} to="/task-fail">Fail</NavLink>
-                            </MenuItem>
-                        </SubMenu>
-                        <SubMenu
-                            title="Personal"
-                            icon={<PersonIcon />}
-                        >
-                            <MenuItem active = {true}>                 
-                                <NavLink activeStyle={{fontWeight: "bold"}} to="/create-event">Create Event</NavLink>
-                            </MenuItem>
-                            <MenuItem>                 
-                                <NavLink activeStyle={{fontWeight: "bold"}} to="/finance">Finance</NavLink>
-                            </MenuItem>
-                            <MenuItem>                 
-                                <NavLink activeStyle={{fontWeight: "bold"}} to="/chart">Chart</NavLink>
                             </MenuItem>
                         </SubMenu>
                     </Menu>

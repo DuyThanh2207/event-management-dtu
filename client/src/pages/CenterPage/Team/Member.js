@@ -58,11 +58,12 @@ const Member = () => {
     }
     const deleteUser = (userID) => {
         axios.post('/delete-member', {
+            staff_id: "%" + userID + "%",
             account_staff_id: userID,
         })
         .then((res) => {
             if(res.data.message){
-                NotificationManager.error("Fail", "Error", 3000);
+                NotificationManager.error(res.data.message, "Error", 3000);
             }
             else {
                 NotificationManager.success("Complete !", "Success", 3000);
