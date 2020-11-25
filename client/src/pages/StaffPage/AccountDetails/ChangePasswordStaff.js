@@ -4,10 +4,10 @@ import Footer from './../../../components/Footer';
 import Button from '@material-ui/core/Button';
 import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import { useHistory } from "react-router-dom";
-import Navbar from './../../../components/AdminPage/Navbar';
+import Navbar from './../../../components/StaffPage/Navbar';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 const axios = require('axios');
-const ChangeAccountInformation = () => {
+const ChangePassword = () => {
     const [oldPassword, setOldPassword] = useState();
     const [newPassword, setNewPassword] = useState();
     let history = useHistory();
@@ -19,7 +19,7 @@ const ChangeAccountInformation = () => {
             axios.post('/change-password', {
                 new_password : newPassword,
                 old_password : oldPassword,
-                account_username : sessionStorage.getItem("account_username")
+                account_id : sessionStorage.getItem("account_id")
               })
               .then((res) => {
                 if(res.data.message){
@@ -89,4 +89,4 @@ const ChangeAccountInformation = () => {
     );
 }
 
-export default ChangeAccountInformation;
+export default ChangePassword;

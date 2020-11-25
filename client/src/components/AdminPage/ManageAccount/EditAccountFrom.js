@@ -3,14 +3,16 @@ import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import Button from "@material-ui/core/Button";
 import MenuItem from "@material-ui/core/MenuItem";
 import { SliderPicker } from "react-color";
-const CreateAccountForm = (props) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [role, setRole] = useState("");
-  const [color, setColor] = useState("");
-  const getCreateAccount = () => {
+const EditAccountForm = (props) => {
+  const [username, setUsername] = useState(props.editUser.account_username);
+  const [password, setPassword] = useState(props.editUser.account_password);
+  const [email, setEmail] = useState(props.editUser.account_email);
+  const [name, setName] = useState(props.editUser.account_name);
+  const [role, setRole] = useState(props.editUser.account_role);
+  const [color, setColor] = useState(
+    props.editUser.account_color === null ? " " : props.editUser.account_color
+  );
+  const getEditAccount = () => {
     let data = {
       account_username: username,
       account_password: password,
@@ -19,22 +21,20 @@ const CreateAccountForm = (props) => {
       account_role: role,
       account_color: color,
     };
-    props.getAddData(data);
+    props.getEditUser(data);
   };
   return (
     <div style={{ width: "90%" }}>
       <ValidatorForm
-        onSubmit={getCreateAccount}
+        onSubmit={getEditAccount}
         style={{ width: "100%", height: "100%" }}
       >
         <TextValidator
+          disabled
           style={{ width: "100%" }}
           label="Username"
-          onChange={(e) => setUsername(e.target.value)}
           value={username}
-          validators={["required"]}
           type="text"
-          errorMessages={["This field is required"]}
         />
         <br />
         <TextValidator
@@ -106,4 +106,4 @@ const CreateAccountForm = (props) => {
     </div>
   );
 };
-export default CreateAccountForm;
+export default EditAccountForm;
