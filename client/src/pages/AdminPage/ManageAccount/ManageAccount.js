@@ -85,22 +85,33 @@ const ManageAccount = () => {
   };
   const blockUser = (rowData) => {
     if (window.confirm("Are you sure block this user ?"))
-      axios
-        .post("/block-user", {
-          account_username: rowData.account_username.toLowerCase(),
-        })
-        .then((res) => {
-          if (res.data.message) {
-            NotificationManager.error(res.data.message, "Error", 3000);
-          } else {
-            NotificationManager.success("Complete !", "Success", 3000);
-            setCreateStatus(false);
-            fetchData();
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      if (
+        rowData.account_username.toLowerCase() ===
+        sessionStorage.getItem("account_username").toLowerCase()
+      )
+        NotificationManager.error(
+          "You can't block your account",
+          "Error",
+          3000
+        );
+      else {
+        axios
+          .post("/block-user", {
+            account_username: rowData.account_username.toLowerCase(),
+          })
+          .then((res) => {
+            if (res.data.message) {
+              NotificationManager.error(res.data.message, "Error", 3000);
+            } else {
+              NotificationManager.success("Complete !", "Success", 3000);
+              setCreateStatus(false);
+              fetchData();
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
   };
   const getAddData = (data) => {
     axios
@@ -138,7 +149,10 @@ const ManageAccount = () => {
     setShow(true);
   };
   const deleteUser = (userID) => {
-    if (userID === sessionStorage.getItem("account_username"))
+    if (
+      userID.toLowerCase() ===
+      sessionStorage.getItem("account_username").toLowerCase()
+    )
       NotificationManager.error("You can't delete your account", "Error", 3000);
     else {
       axios
