@@ -6,7 +6,6 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
-import ListSubheader from "@material-ui/core/ListSubheader";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -33,11 +32,10 @@ const TaskStaff = () => {
   const [eventData, setEventData] = useState([]);
   const [eventId, setEventId] = useState();
   const [loading, setLoading] = useState(false);
-  const [task, setTask] = useState(0);
   const fetchData = async () => {
     let data = await axios
       .post("/task-staff-all", {
-        staff_id: "%" + sessionStorage.getItem("account_id") + "%",
+        staff_id: "%" + sessionStorage.getItem("account_username") + "%",
         event_id: eventId,
       })
       .then((res) => {
@@ -48,7 +46,7 @@ const TaskStaff = () => {
       });
     let dataDone = await axios
       .post("/task-staff-done", {
-        staff_id: "%" + sessionStorage.getItem("account_id") + "%",
+        staff_id: "%" + sessionStorage.getItem("account_username") + "%",
         event_id: eventId,
       })
       .then((res) => {
@@ -59,7 +57,7 @@ const TaskStaff = () => {
       });
     let dataInProcess = await axios
       .post("/task-staff-inprocess", {
-        staff_id: "%" + sessionStorage.getItem("account_id") + "%",
+        staff_id: "%" + sessionStorage.getItem("account_username") + "%",
         event_id: eventId,
       })
       .then((res) => {
@@ -78,20 +76,10 @@ const TaskStaff = () => {
       .then((res) => {
         axios
           .post("/event-staff", {
-            staff_id: "%" + sessionStorage.getItem("account_id") + "%",
+            staff_id: "%" + sessionStorage.getItem("account_username") + "%",
           })
           .then((res) => {
             if (res.data.length > 0) setEventData(res.data);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-        axios
-          .post("/task-staff", {
-            staff_id: "%" + sessionStorage.getItem("account_id") + "%",
-          })
-          .then((res) => {
-            if (res.data.length > 0) setTask(res.data.length);
           })
           .catch((error) => {
             console.log(error);
@@ -107,7 +95,7 @@ const TaskStaff = () => {
     setTimeout(async () => {
       let data = await axios
         .post("/task-staff-all", {
-          staff_id: "%" + sessionStorage.getItem("account_id") + "%",
+          staff_id: "%" + sessionStorage.getItem("account_username") + "%",
           event_id: e.event_id,
         })
         .then((res) => {
@@ -118,7 +106,7 @@ const TaskStaff = () => {
         });
       let dataDone = await axios
         .post("/task-staff-done", {
-          staff_id: "%" + sessionStorage.getItem("account_id") + "%",
+          staff_id: "%" + sessionStorage.getItem("account_username") + "%",
           event_id: e.event_id,
         })
         .then((res) => {
@@ -129,7 +117,7 @@ const TaskStaff = () => {
         });
       let dataInProcess = await axios
         .post("/task-staff-inprocess", {
-          staff_id: "%" + sessionStorage.getItem("account_id") + "%",
+          staff_id: "%" + sessionStorage.getItem("account_username") + "%",
           event_id: e.event_id,
         })
         .then((res) => {
@@ -140,7 +128,7 @@ const TaskStaff = () => {
         });
       let dataFail = await axios
         .post("/task-staff-fail", {
-          staff_id: "%" + sessionStorage.getItem("account_id") + "%",
+          staff_id: "%" + sessionStorage.getItem("account_username") + "%",
           event_id: e.event_id,
         })
         .then((res) => {

@@ -23,7 +23,12 @@ const Header = () => {
       style={{ marginTop: "-10px" }}
     >
       <div></div>
-      <h4 className="mt-3">Event Management</h4>
+      <h4 className="mt-3">
+        <strong style={{ fontFamily: '"Goldman", cursive' }}>
+          Hello {sessionStorage.getItem("account_name")} !
+        </strong>
+        <hr />
+      </h4>
       <MDBDropdown size="sm">
         <MDBDropdownToggle
           caret

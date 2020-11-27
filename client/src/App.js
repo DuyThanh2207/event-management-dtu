@@ -7,18 +7,11 @@ import Login from "./pages/LoginPage/Login";
 import PrivateRoute from "./helper/PrivateRouter";
 import PublicRouter from "./helper/PublicRouter";
 import EventAllCenter from "./pages/CenterPage/Event/EventAllCenter";
-import EventLiveCenter from "./pages/CenterPage/Event/EventLiveCenter";
-import EventPastCenter from "./pages/CenterPage/Event/EventPastCenter";
 import Member from "./pages/CenterPage/Team/Member";
 import GiveTasks from "./pages/CenterPage/Tasks/GiveTasks";
-import TaskDone from "./pages/CenterPage/Tasks/TaskDone";
-import TaskNotDone from "./pages/CenterPage/Tasks/TaskNotDone";
-import EventFutureCenter from "./pages/CenterPage/Event/EventFutureCenter";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "bootstrap-css-only/css/bootstrap.min.css";
 import "mdbreact/dist/css/mdb.css";
-import TaskFail from "./pages/CenterPage/Tasks/TaskFail";
-import CreateEvent from "./pages/CenterPage/Personal/CreateEvent";
 import Finance from "./pages/CenterPage/Personal/Finance";
 import Chart from "./pages/CenterPage/Personal/Chart";
 import ChangePassword from "./pages/CenterPage/ChangeAccountInformation/ChangePassword";
@@ -45,21 +38,6 @@ function App() {
               <EventStaff />
             )}
           </PrivateRoute>
-          <PrivateRoute exact path="/event-future">
-            {sessionStorage.getItem("account_role") === "DTU Event Center" && (
-              <EventFutureCenter />
-            )}
-          </PrivateRoute>
-          <PrivateRoute exact path="/event-live">
-            {sessionStorage.getItem("account_role") === "DTU Event Center" && (
-              <EventLiveCenter />
-            )}
-          </PrivateRoute>
-          <PrivateRoute exact path="/event-past">
-            {sessionStorage.getItem("account_role") === "DTU Event Center" && (
-              <EventPastCenter />
-            )}
-          </PrivateRoute>
           <PrivateRoute exact path="/manage-account">
             <ManageAccount />
           </PrivateRoute>
@@ -84,18 +62,6 @@ function App() {
             {sessionStorage.getItem("account_role") === "DTU Event Staff" && (
               <TaskStaff />
             )}
-          </PrivateRoute>
-          <PrivateRoute exact path="/task-done">
-            <TaskDone />
-          </PrivateRoute>
-          <PrivateRoute exact path="/task-in-process">
-            <TaskNotDone />
-          </PrivateRoute>
-          <PrivateRoute exact path="/task-fail">
-            <TaskFail />
-          </PrivateRoute>
-          <PrivateRoute exact path="/create-event">
-            <CreateEvent />
           </PrivateRoute>
           <PrivateRoute exact path="/finance">
             <Finance />

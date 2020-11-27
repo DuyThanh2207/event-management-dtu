@@ -29,7 +29,7 @@ const CreateAccountForm = (props) => {
       >
         <TextValidator
           style={{ width: "100%" }}
-          label="Username"
+          label="Username *"
           onChange={(e) => setUsername(e.target.value)}
           value={username}
           validators={["required"]}
@@ -39,7 +39,7 @@ const CreateAccountForm = (props) => {
         <br />
         <TextValidator
           style={{ width: "100%" }}
-          label="Password"
+          label="Password *"
           onChange={(e) => setPassword(e.target.value)}
           value={password}
           type="password"
@@ -49,7 +49,7 @@ const CreateAccountForm = (props) => {
         <br />
         <TextValidator
           style={{ width: "100%" }}
-          label="Name"
+          label="Name *"
           onChange={(e) => setName(e.target.value)}
           value={name}
           type="text"
@@ -59,7 +59,7 @@ const CreateAccountForm = (props) => {
         <br />
         <TextValidator
           style={{ width: "100%" }}
-          label="Email"
+          label="Email *"
           onChange={(e) => setEmail(e.target.value)}
           value={email}
           type="email"
@@ -69,7 +69,7 @@ const CreateAccountForm = (props) => {
         <br />
         <TextValidator
           style={{ width: "100%" }}
-          label="Role"
+          label="Role *"
           select
           value={role}
           onChange={(e) => setRole(e.target.value)}
@@ -97,11 +97,12 @@ const CreateAccountForm = (props) => {
             <br />
           </div>
         )}
-        <div className="mt-3">
-          <Button color="primary" variant="contained" type="submit">
-            Submit
-          </Button>
-        </div>
+        <h5 className="mb-3" style={{ color: "red" }}>
+          * is require
+        </h5>
+        <Button color="primary" variant="contained" type="submit">
+          Submit
+        </Button>
       </ValidatorForm>
     </div>
   );

@@ -1,91 +1,141 @@
-import React, { useEffect, useState } from 'react';
-import { useForm } from "react-hook-form";
-import "./AddTask.css"
-import "./AddTask.scss"
-import Multiselect from 'react-widgets/lib/Multiselect';
-import 'date-fns';
-import Grid from '@material-ui/core/Grid';
-import DateFnsUtils from '@date-io/date-fns';
+import React, { useEffect, useState } from "react";
+import "./AddTask.scss";
+import Multiselect from "react-widgets/lib/Multiselect";
+import "date-fns";
+import Grid from "@material-ui/core/Grid";
+import TextField from "@material-ui/core/TextField";
+import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
+import DateFnsUtils from "@date-io/date-fns";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
-} from '@material-ui/pickers';
-const axios = require('axios');
+} from "@material-ui/pickers";
+const axios = require("axios");
 const AddTask = (props) => {
-    const [staffData, setStaffData] = useState([]);
-    const { register, handleSubmit, errors } = useForm();
-    const [staffTask, setStaffTask] = useState([]);
-    const [selectedDate, setSelectedDate] = useState(new Date());    
-    var staffId = []
-    useEffect(() => {
-        axios.post('/member', {
-            account_id: sessionStorage.getItem("account_id")
-        }).then((res) => {
-            res.data.forEach((item) => {
-                staffId.push(item.account_id)
-            })
-            setStaffData(staffId)
-        })
-        .catch((error) => {
-            console.log(error);
-        })
-    },[])
-    const getCreateAccount = (data) => {
-        let tempData = staffTask.join(', ')
-        var today = new Date(selectedDate);
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = today.getFullYear();
-        today = yyyy + '-' + mm + '-' + dd;
-        let temp = {...data, staff_id: tempData, deadline: today}
-        props.getAddTaskData(temp)
-        props.changeAddStatus()
-    }
-    return (
-        <div className="card" style={{width: '100%'}}>
-            <div className="card-body">
-                <form onSubmit={handleSubmit(getCreateAccount)}>
-                    <label>Task Name</label>
-                    <input
-                        className="form-control"
-                        name="task_name"
-                        type="text"
-                        ref={register({required: true})}
-                    />
-                    {errors.task_name && <p>This field is required</p>}
-                    <label>Task Description</label>
-                    <input
-                        className="form-control"
-                        name="task_description"
-                        type="text" 
-                        ref={register({required: false})}
-                    />
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <Grid container justify="space-around">
-                            <KeyboardDatePicker
-                            disableToolbar
-                            variant="inline"
-                            format="dd/MM/yyyy"
-                            margin="normal"
-                            id="date-picker-inline"
-                            label="Deadline"
-                            value={selectedDate}
-                            onChange={value => setSelectedDate(value)}
-                            KeyboardButtonProps={{
-                                'aria-label': 'change date',
-                            }}
-                            />
-                        </Grid>
-                    </MuiPickersUtilsProvider>
-                    <label>Staff</label>
-                    <Multiselect
-                        data={staffData}
-                        onChange={value =>setStaffTask(value)}
-                    />
-                    <input type="submit" value="Create Task" className="btn btn-primary btn-block mt-4"/>
-                </form>
-            </div>
+  const [staffData, setStaffData] = useState([]);
+  const [staffTask, setStaffTask] = useState([]);
+  const [taskName, setTaskName] = useState("");
+  const [taskDescription, setTaskDescription] = useState("");
+  const [selectedDeadline, setSelectedDeadline] = useState(new Date());
+  const [selectedStartDate, setSelectedStartDate] = useState(new Date());
+  var staffId = [];
+  useEffect(() => {
+    axios
+      .post("/member", {
+        account_username: sessionStorage.getItem("account_username"),
+      })
+      .then((res) => {
+        res.data.forEach((item) => {
+          staffId.push(item.account_username);
+        });
+        setStaffData(staffId);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+  const getCreateTask = (data) => {
+    let tempData = staffTask.join(", ");
+    var deadline = new Date(selectedDeadline);
+    var dd = String(deadline.getDate()).padStart(2, "0");
+    var mm = String(deadline.getMonth() + 1).padStart(2, "0"); //January is 0!
+    var yyyy = deadline.getFullYear();
+    deadline = yyyy + "-" + mm + "-" + dd;
+    var startDate = new Date(selectedStartDate);
+    var dd = String(startDate.getDate()).padStart(2, "0");
+    var mm = String(startDate.getMonth() + 1).padStart(2, "0"); //January is 0!
+    var yyyy = startDate.getFullYear();
+    startDate = yyyy + "-" + mm + "-" + dd;
+    let temp = {
+      task_name: taskName,
+      task_description: taskDescription,
+      staff_id: tempData,
+      start_date: startDate,
+      deadline: deadline,
+    };
+    props.getAddTaskData(temp);
+  };
+  return (
+    <div className="card" style={{ width: "100%" }}>
+      <div className="card-body">
+        <div style={{ width: "100%" }}>
+          <ValidatorForm
+            onSubmit={getCreateTask}
+            style={{ width: "100%", height: "100%" }}
+          >
+            <TextValidator
+              style={{ width: "100%" }}
+              label="Task Name *"
+              onChange={(e) => setTaskName(e.target.value)}
+              value={taskName}
+              validators={["required"]}
+              type="text"
+              errorMessages={["This field is required"]}
+            />
+            <br />
+            <TextField
+              style={{ width: "100%" }}
+              label="Task Description"
+              onChange={(e) => setTaskDescription(e.target.value)}
+              value={taskDescription}
+              type="text"
+            />
+            <br />
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <Grid container>
+                <KeyboardDatePicker
+                  disableToolbar
+                  variant="inline"
+                  format="dd/MM/yyyy"
+                  margin="normal"
+                  id="date-picker-inline"
+                  label="Start Date *"
+                  value={selectedStartDate}
+                  onChange={(value) => setSelectedStartDate(value)}
+                  KeyboardButtonProps={{
+                    "aria-label": "change date",
+                  }}
+                />
+              </Grid>
+            </MuiPickersUtilsProvider>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <Grid container>
+                <KeyboardDatePicker
+                  disableToolbar
+                  variant="inline"
+                  format="dd/MM/yyyy"
+                  margin="normal"
+                  id="date-picker-inline"
+                  label="Deadline *"
+                  value={selectedDeadline}
+                  onChange={(value) => setSelectedDeadline(value)}
+                  KeyboardButtonProps={{
+                    "aria-label": "change date",
+                  }}
+                />
+              </Grid>
+            </MuiPickersUtilsProvider>
+            <label>Staff *</label>
+            <Multiselect
+              data={staffData}
+              onChange={(value) => setStaffTask(value)}
+            />
+            <h5 className="mb-3" style={{ color: "red" }}>
+              * is require
+            </h5>
+            <button className="btn btn-primary" type="submit">
+              Submit
+            </button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => props.changeAddStatus()}
+            >
+              Close
+            </button>
+          </ValidatorForm>
         </div>
-    );
-}
+      </div>
+    </div>
+  );
+};
 export default AddTask;
