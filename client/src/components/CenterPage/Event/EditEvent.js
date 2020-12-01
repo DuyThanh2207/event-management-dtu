@@ -27,8 +27,7 @@ function EditEvent(props) {
       title: "Event Duration ( hour )",
       field: "event_duration",
       type: "numeric",
-      validate: (rowData) =>
-        rowData.event_duration < 1 ? "Event Duration must be after 0" : "",
+      validate: (rowData) => rowData.event_duration > 0,
     },
   ]);
   const getEditEvent = (newData) => {

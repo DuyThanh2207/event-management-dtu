@@ -318,36 +318,6 @@ router.post("/delete-task", (req, res) => {
         }
     );
 });
-router.post("/task-done", (req, res) => {
-    const event_id = req.body.event_id;
-    connection.query(
-        "SELECT task_id, task_name, task_description, DATE_FORMAT(deadline, '%d-%m-%Y') as deadline, DATE_FORMAT(start_date, '%d-%m-%Y') as start_date, status, staff_id FROM emd.task where event_id = ? and status = 'Done'", [event_id],
-        (err, response) => {
-            if (err) res.send({ message: err });
-            else res.send(response);
-        }
-    );
-});
-router.post("/task-not-done", (req, res) => {
-    const event_id = req.body.event_id;
-    connection.query(
-        "SELECT task_id, task_name, task_description, DATE_FORMAT(deadline, '%d-%m-%Y') as deadline, DATE_FORMAT(start_date, '%d-%m-%Y') as start_date, status, staff_id FROM emd.task where event_id = ? and status = 'In Process'", [event_id],
-        (err, response) => {
-            if (err) res.send({ message: err });
-            else res.send(response);
-        }
-    );
-});
-router.post("/task-fail", (req, res) => {
-    const event_id = req.body.event_id;
-    connection.query(
-        "SELECT task_id, task_name, task_description, DATE_FORMAT(deadline, '%d-%m-%Y') as deadline, DATE_FORMAT(start_date, '%d-%m-%Y') as start_date, status, staff_id FROM emd.task where event_id = ? and status = 'Fail'", [event_id],
-        (err, response) => {
-            if (err) res.send({ message: err });
-            else res.send(response);
-        }
-    );
-});
 router.get("/check-task", (req, res) => {
     connection.query(
         "UPDATE task SET status = 'Fail' where DATE_FORMAT(deadline, '%Y-%m-%d') < ? and status = 'In Process'", [today],
@@ -449,32 +419,6 @@ router.post("/delete-event", (req, res) => {
         }
     );
 });
-router.post("/event-center-available", (req, res) => {
-    const datetimeformat = "%d-%m-%Y";
-    const datetime = "%Y-%m-%d";
-    const account_id = req.body.account_id;
-    const timeFormat = "%H:%i:%s";
-    connection.query(
-        "SELECT DISTINCT event_id, event_name, event_place, event_date as time, DATE_FORMAT(event_date, ?) as event_date, DATE_FORMAT(event_date, ?) as event_time, event_duration, event_description, center_id  FROM emd_event where center_id = ? and DATE_FORMAT(event_date, ?) >= ?", [datetimeformat, timeFormat, account_id, datetime, today],
-        (err, response) => {
-            if (err) res.send({ message: "Can't show data" });
-            else res.send(response);
-        }
-    );
-});
-router.post("/event-center-unavailable", (req, res) => {
-    const datetimeformat = "%d-%m-%Y";
-    const datetime = "%Y-%m-%d";
-    const account_id = req.body.account_id;
-    const timeFormat = "%H:%i:%s";
-    connection.query(
-        "SELECT DISTINCT event_id, event_name, event_place, event_date as time, DATE_FORMAT(event_date, ?) as event_date, DATE_FORMAT(event_date, ?) as event_time, event_duration, event_description, center_id  FROM emd_event where center_id = ? and DATE_FORMAT(event_date, ?) < ?", [datetimeformat, timeFormat, account_id, datetime, today],
-        (err, response) => {
-            if (err) res.send({ message: "Can't show data" });
-            else res.send(response);
-        }
-    );
-});
 router.post("/show", (req, res) => {
     const event_id = req.body.event_id;
     connection.query(
@@ -488,10 +432,19 @@ router.post("/show", (req, res) => {
 router.post("/add-show", (req, res) => {
     const event_id = req.body.event_id;
     const show_name = req.body.show_name;
-    const show_duration = req.body.show_duration;
+    const show_description = req.body.show_description;
+    const show_start_time = req.body.show_start_time;
+    const show_finish_time = req.body.show_finish_time;
     const show_speaker = req.body.show_speaker;
     connection.query(
-        "INSERT INTO event_show (event_id, show_name, show_duration, show_speaker) VALUES (?, ?, ?, ?)", [event_id, show_name, show_duration, show_speaker],
+        "INSERT INTO event_show (event_id, show_name, show_start_time, show_finish_time, show_speaker, show_description) VALUES (?, ?, ?, ?, ?, ?)", [
+            event_id,
+            show_name,
+            show_start_time,
+            show_finish_time,
+            show_speaker,
+            show_description,
+        ],
         (err, response) => {
             if (err) res.send({ message: err });
             else res.send(response);
@@ -501,10 +454,19 @@ router.post("/add-show", (req, res) => {
 router.post("/edit-show", (req, res) => {
     const id = req.body.id;
     const show_name = req.body.show_name;
-    const show_duration = req.body.show_duration;
+    const show_description = req.body.show_description;
+    const show_start_time = req.body.show_start_time;
+    const show_finish_time = req.body.show_finish_time;
     const show_speaker = req.body.show_speaker;
     connection.query(
-        "UPDATE event_show SET show_name = ?, show_duration = ?, show_speaker = ? WHERE id = ?", [show_name, show_duration, show_speaker, id],
+        "UPDATE event_show SET show_name = ?, show_start_time = ?, show_finish_time = ?, show_speaker = ?, show_description = ? WHERE id = ?", [
+            show_name,
+            show_start_time,
+            show_finish_time,
+            show_speaker,
+            show_description,
+            id,
+        ],
         (err, response) => {
             if (err) res.send({ message: err });
             else res.send(response);
@@ -533,10 +495,18 @@ router.post("/finance", (req, res) => {
 });
 router.post("/add-finance", (req, res) => {
     const event_id = req.body.event_id;
-    const finance_spending_description = req.body.finance_spending_description;
+    const finance_name = req.body.finance_name;
+    const finance_description = req.body.finance_description;
+    const finance_time = req.body.finance_time;
     const finance_spending = req.body.finance_spending;
     connection.query(
-        "INSERT INTO finance (event_id, finance_spending_description, finance_spending) VALUES (?, ?, ?)", [event_id, finance_spending_description, finance_spending],
+        "INSERT INTO finance (event_id, finance_name, finance_description, finance_time, finance_spending) VALUES (?, ?, ?, ?, ?)", [
+            event_id,
+            finance_name,
+            finance_description,
+            finance_time,
+            finance_spending,
+        ],
         (err, response) => {
             if (err) res.send({ message: err });
             else res.send(response);
@@ -545,10 +515,12 @@ router.post("/add-finance", (req, res) => {
 });
 router.post("/edit-finance", (req, res) => {
     const id = req.body.id;
-    const finance_spending_description = req.body.finance_spending_description;
+    const finance_name = req.body.finance_name;
+    const finance_description = req.body.finance_description;
+    const finance_time = req.body.finance_time;
     const finance_spending = req.body.finance_spending;
     connection.query(
-        "UPDATE finance SET finance_spending_description = ?, finance_spending = ? WHERE id = ?", [finance_spending_description, finance_spending, id],
+        "UPDATE finance SET finance_name = ?, finance_description = ?, finance_time = ?, finance_spending = ? WHERE id = ?", [finance_name, finance_description, finance_time, finance_spending, id],
         (err, response) => {
             if (err) res.send({ message: err });
             else res.send(response);
@@ -566,9 +538,9 @@ router.post("/delete-finance", (req, res) => {
     );
 });
 router.post("/finance-center", (req, res) => {
-    const center_id = req.body.center_id;
+    const center_username = req.body.center_username;
     connection.query(
-        "Select distinct b.event_name, finance_spending_description, finance_spending from finance a, emd_event b Where a.event_id = b.event_id and b.center_id = ?", [center_id],
+        "SELECT DISTINCT a.finance_name, a.finance_description, a.finance_time, a.finance_spending FROM finance a, emd_event b WHERE a.event_id = b.event_id AND b.center_username = ?", [center_username],
         (err, response) => {
             if (err) res.send({ message: "Can't show data" });
             else res.send(response);
@@ -576,42 +548,20 @@ router.post("/finance-center", (req, res) => {
     );
 });
 router.post("/finance-profit", (req, res) => {
-    const center_id = req.body.center_id;
+    const center_username = req.body.center_username;
     connection.query(
-        "Select distinct b.event_name, sum(finance_spending) as profit from finance a, emd_event b Where a.event_id = b.event_id and b.center_id = ? Group by (b.event_name)", [center_id],
+        "SELECT DISTINCT a.event_name, sum(b.finance_spending) as profit FROM emd_event a LEFT JOIN finance b ON a.event_id = b.event_id WHERE a.center_username = ? GROUP BY (a.event_name)", [center_username],
         (err, response) => {
             if (err) res.send({ message: "Can't show data" });
             else res.send(response);
         }
     );
 });
-router.post("/finance-chart", (req, res) => {
-    const center_id = req.body.center_id;
-    connection.query(
-        "Select distinct b.event_id, b.event_name from finance a, emd_event b Where a.event_id = b.event_id and b.center_id = ?", [center_id],
-        (err, response) => {
-            if (err) res.send({ message: "Can't show data" });
-            else res.send(response);
-        }
-    );
-});
-router.post("/chart", (req, res) => {
-    const event_id = req.body.event_id;
-    const center_id = req.body.center_id;
-    connection.query(
-        "Select distinct finance_spending_description, finance_spending from finance a, emd_event b Where a.event_id = b.event_id and b.center_id = ? and a.event_id = ?", [center_id, event_id],
-        (err, response) => {
-            if (err) res.send({ message: "Can't show data" });
-            else res.send(response);
-        }
-    );
-});
+//Staff Role
 router.post("/event-staff", (req, res) => {
     const staff_id = req.body.staff_id;
-    const datetimeformat = "%d-%m-%Y";
-    const timeFormat = "%H:%i:%s";
     connection.query(
-        "SELECT distinct b.event_id, b.event_name, b.event_place, b.event_date, b.event_duration, b.event_description, DATE_FORMAT(b.event_date, ?) as event_date, DATE_FORMAT(b.event_date, ?) as event_time, b.center_id FROM task a, emd_event b where a.event_id = b.event_id and staff_id LIKE ?", [datetimeformat, timeFormat, staff_id],
+        "SELECT distinct b.event_id, b.event_name, b.event_place, b.event_date, b.event_duration, b.event_description, DATE_FORMAT(b.event_date, '%d-%m-%Y') as event_date, DATE_FORMAT(b.event_date, '%H:%i:%s') as event_time, b.event_date as time FROM task a, emd_event b where a.event_id = b.event_id and a.staff_id LIKE ?", [staff_id],
         (err, response) => {
             if (err) res.send({ message: err });
             else res.send(response);
@@ -652,9 +602,8 @@ router.post("/task-staff-done", (req, res) => {
 });
 router.post("/task-staff-inprocess", (req, res) => {
     const staff_id = req.body.staff_id;
-    const event_id = req.body.event_id;
     connection.query(
-        'SELECT distinct * from task where staff_id like ? and status = "In Process" and event_id = ?', [staff_id, event_id],
+        'SELECT distinct * from task where staff_id like ? and status = "In Process"', [staff_id],
         (err, response) => {
             if (err) res.send({ message: err });
             else res.send(response);

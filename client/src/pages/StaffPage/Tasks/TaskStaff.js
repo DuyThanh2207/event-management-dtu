@@ -24,13 +24,10 @@ import {
 const axios = require("axios");
 const TaskStaff = () => {
   const [taskAll, setTaskAll] = useState([]);
-  const [taskDone, setTaskDone] = useState([]);
-  const [taskInProcess, setTaskInProcess] = useState([]);
-  const [taskFail, setTaskFail] = useState([]);
-  const [status, setStatus] = useState("all");
   const [eventStatus, setEventStatus] = useState("availableEvent");
   const [eventData, setEventData] = useState([]);
   const [eventId, setEventId] = useState();
+  const [eventTitle, setEventTitle] = useState("");
   const [loading, setLoading] = useState(false);
   const fetchData = async () => {
     let data = await axios
@@ -44,35 +41,10 @@ const TaskStaff = () => {
       .catch((error) => {
         console.log(error);
       });
-    let dataDone = await axios
-      .post("/task-staff-done", {
-        staff_id: "%" + sessionStorage.getItem("account_username") + "%",
-        event_id: eventId,
-      })
-      .then((res) => {
-        setTaskDone(res.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    let dataInProcess = await axios
-      .post("/task-staff-inprocess", {
-        staff_id: "%" + sessionStorage.getItem("account_username") + "%",
-        event_id: eventId,
-      })
-      .then((res) => {
-        setTaskInProcess(res.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-  const handleChange = (e) => {
-    setStatus(e.target.value);
   };
   useEffect(() => {
     axios
-      .post("/check-task")
+      .get("/check-task")
       .then((res) => {
         axios
           .post("/event-staff", {
@@ -92,6 +64,9 @@ const TaskStaff = () => {
   const onHandledClick = (e) => {
     setLoading(true);
     setEventId(e.event_id);
+    let temp =
+      e.event_name + " start on " + e.event_date + " at " + e.event_time;
+    setEventTitle(temp);
     setTimeout(async () => {
       let data = await axios
         .post("/task-staff-all", {
@@ -100,39 +75,6 @@ const TaskStaff = () => {
         })
         .then((res) => {
           setTaskAll(res.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      let dataDone = await axios
-        .post("/task-staff-done", {
-          staff_id: "%" + sessionStorage.getItem("account_username") + "%",
-          event_id: e.event_id,
-        })
-        .then((res) => {
-          setTaskDone(res.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      let dataInProcess = await axios
-        .post("/task-staff-inprocess", {
-          staff_id: "%" + sessionStorage.getItem("account_username") + "%",
-          event_id: e.event_id,
-        })
-        .then((res) => {
-          setTaskInProcess(res.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      let dataFail = await axios
-        .post("/task-staff-fail", {
-          staff_id: "%" + sessionStorage.getItem("account_username") + "%",
-          event_id: e.event_id,
-        })
-        .then((res) => {
-          setTaskFail(res.data);
         })
         .catch((error) => {
           console.log(error);
@@ -173,9 +115,9 @@ const TaskStaff = () => {
   var unavailableEvent = [];
   eventData.forEach((item) => {
     {
-      if (item.event_date > today) {
+      if (new Date(item.time) > new Date()) {
         availableEvent.push(item);
-      } else if (item.event_date < today) {
+      } else if (new Date(item.time) < new Date()) {
         unavailableEvent.push(item);
       }
     }
@@ -191,7 +133,7 @@ const TaskStaff = () => {
               <div className="card" style={{ width: "100%" }}>
                 <div className="card-body">
                   <div className="d-flex justify-content-center">
-                    <h2>EVENT</h2>
+                    <h2>TASK</h2>
                   </div>
                   <div className="d-flex justify-content-end">
                     <FormControl component="fieldset">
@@ -258,6 +200,11 @@ const TaskStaff = () => {
                     </List>
                   )}
                 </div>
+                <div className="mb-2 mr-3 d-flex justify-content-end">
+                  <strong>
+                    <i>Click event to see task's details</i>
+                  </strong>
+                </div>
               </div>
             </div>
           </div>
@@ -277,124 +224,36 @@ const TaskStaff = () => {
                   <Spinner animation="border" />
                 </div>
               ) : (
-                <>
-                  <div className="row ml-5">
-                    <FormControl component="fieldset">
-                      <RadioGroup
-                        row
-                        aria-label="position"
-                        name="position"
-                        defaultValue="all"
-                        onChange={handleChange}
-                      >
-                        <FormControlLabel
-                          value="all"
-                          control={<Radio />}
-                          label="All"
-                        />
-                        <FormControlLabel
-                          value="done"
-                          control={<Radio />}
-                          label="Done"
-                        />
-                        <FormControlLabel
-                          value="inProcess"
-                          control={<Radio />}
-                          label="In Process"
-                        />
-                        <FormControlLabel
-                          value="fail"
-                          control={<Radio />}
-                          label="Fail"
-                        />
-                      </RadioGroup>
-                    </FormControl>
-                  </div>
-                  <div className="row mt-2">
-                    <div className="col">
-                      {status === "all" && (
-                        <MaterialTable
-                          title="Account"
-                          columns={[
-                            { title: "Task", field: "task_name" },
-                            {
-                              title: "Task Description",
-                              field: "task_description",
-                            },
-                            {
-                              title: "Start Date",
-                              field: "start_date",
-                              type: "date",
-                            },
-                            {
-                              title: "Deadline",
-                              field: "deadline",
-                              type: "date",
-                            },
-                            {
-                              title: "Status",
-                              field: "status",
-                              editable: "never",
-                            },
-                          ]}
-                          data={taskAll}
-                        />
-                      )}
-                      {status === "done" && (
-                        <MaterialTable
-                          title="Account"
-                          columns={[
-                            { title: "Task", field: "task_name" },
-                            {
-                              title: "Task Description",
-                              field: "task_description",
-                            },
-                            {
-                              title: "Start Date",
-                              field: "start_date",
-                              type: "date",
-                            },
-                            {
-                              title: "Deadline",
-                              field: "deadline",
-                              type: "date",
-                            },
-                            {
-                              title: "Status",
-                              field: "status",
-                              editable: "never",
-                            },
-                          ]}
-                          data={taskDone}
-                        />
-                      )}
-                      {status === "inProcess" && (
-                        <MaterialTable
-                          title="Account"
-                          columns={[
-                            { title: "Task", field: "task_name" },
-                            {
-                              title: "Task Description",
-                              field: "task_description",
-                            },
-                            {
-                              title: "Start Date",
-                              field: "start_date",
-                              type: "date",
-                            },
-                            {
-                              title: "Deadline",
-                              field: "deadline",
-                              type: "date",
-                            },
-                            {
-                              title: "Status",
-                              field: "status",
-                              editable: "never",
-                            },
-                            {
-                              title: "Done ?",
-                              render: (rowData) => (
+                <div className="row mt-2">
+                  <div className="col">
+                    <MaterialTable
+                      title={eventTitle}
+                      columns={[
+                        { title: "Task", field: "task_name" },
+                        {
+                          title: "Task Description",
+                          field: "task_description",
+                        },
+                        {
+                          title: "Start Date",
+                          field: "start_date",
+                          type: "date",
+                        },
+                        {
+                          title: "Deadline",
+                          field: "deadline",
+                          type: "date",
+                        },
+                        {
+                          title: "Status",
+                          field: "status",
+                          editable: "never",
+                        },
+                        {
+                          title: "Done ?",
+                          render: (rowData) => {
+                            if (rowData.status === "In Process")
+                              return (
                                 <div
                                   type="button"
                                   onClick={() => {
@@ -408,43 +267,17 @@ const TaskStaff = () => {
                                 >
                                   <AssignmentTurnedInIcon />
                                 </div>
-                              ),
-                            },
-                          ]}
-                          data={taskInProcess}
-                        />
-                      )}
-                      {status === "fail" && (
-                        <MaterialTable
-                          title="Account"
-                          columns={[
-                            { title: "Task", field: "task_name" },
-                            {
-                              title: "Task Description",
-                              field: "task_description",
-                            },
-                            {
-                              title: "Start Date",
-                              field: "start_date",
-                              type: "date",
-                            },
-                            {
-                              title: "Deadline",
-                              field: "deadline",
-                              type: "date",
-                            },
-                            {
-                              title: "Status",
-                              field: "status",
-                              editable: "never",
-                            },
-                          ]}
-                          data={taskFail}
-                        />
-                      )}
-                    </div>
+                              );
+                          },
+                        },
+                      ]}
+                      data={taskAll}
+                      options={{
+                        filtering: true,
+                      }}
+                    />
                   </div>
-                </>
+                </div>
               )}
             </div>
             <div class="modal-footer">
@@ -472,119 +305,33 @@ const TaskStaff = () => {
                   <Spinner animation="border" />
                 </div>
               ) : (
-                <>
-                  <div className="row ml-5">
-                    <FormControl component="fieldset">
-                      <RadioGroup
-                        row
-                        aria-label="position"
-                        name="position"
-                        defaultValue="all"
-                        onChange={handleChange}
-                      >
-                        <FormControlLabel
-                          value="all"
-                          control={<Radio />}
-                          label="All"
-                        />
-                        <FormControlLabel
-                          value="done"
-                          control={<Radio />}
-                          label="Done"
-                        />
-                        <FormControlLabel
-                          value="fail"
-                          control={<Radio />}
-                          label="Fail"
-                        />
-                      </RadioGroup>
-                    </FormControl>
+                <div className="row mt-2">
+                  <div className="col">
+                    <MaterialTable
+                      title={eventTitle}
+                      columns={[
+                        { title: "Task", field: "task_name" },
+                        {
+                          title: "Task Description",
+                          field: "task_description",
+                        },
+                        {
+                          title: "Start Date",
+                          field: "start_date",
+                          type: "date",
+                        },
+                        {
+                          title: "Deadline",
+                          field: "deadline",
+                          type: "date",
+                        },
+                        { title: "Status", field: "status" },
+                      ]}
+                      data={taskAll}
+                      options={{ filtering: true }}
+                    />
                   </div>
-                  <div className="row mt-2">
-                    <div className="col">
-                      {status === "all" && (
-                        <MaterialTable
-                          title="Account"
-                          columns={[
-                            { title: "Task", field: "task_name" },
-                            {
-                              title: "Task Description",
-                              field: "task_description",
-                            },
-                            {
-                              title: "Start Date",
-                              field: "start_date",
-                              type: "date",
-                            },
-                            {
-                              title: "Deadline",
-                              field: "deadline",
-                              type: "date",
-                            },
-                            { title: "Status", field: "status" },
-                          ]}
-                          data={taskAll}
-                        />
-                      )}
-                      {status === "done" && (
-                        <MaterialTable
-                          title="Account"
-                          columns={[
-                            { title: "Task", field: "task_name" },
-                            {
-                              title: "Task Description",
-                              field: "task_description",
-                            },
-                            {
-                              title: "Start Date",
-                              field: "start_date",
-                              type: "date",
-                            },
-                            {
-                              title: "Deadline",
-                              field: "deadline",
-                              type: "date",
-                            },
-                            {
-                              title: "Status",
-                              field: "status",
-                              editable: "never",
-                            },
-                          ]}
-                          data={taskDone}
-                        />
-                      )}
-                      {status === "fail" && (
-                        <MaterialTable
-                          title="Account"
-                          columns={[
-                            { title: "Task", field: "task_name" },
-                            {
-                              title: "Task Description",
-                              field: "task_description",
-                            },
-                            {
-                              title: "Start Date",
-                              field: "start_date",
-                              type: "date",
-                            },
-                            {
-                              title: "Deadline",
-                              field: "deadline",
-                              type: "date",
-                            },
-                            {
-                              title: "Status",
-                              field: "status",
-                              editable: "never",
-                            },
-                          ]}
-                          data={taskFail}
-                        />
-                      )}
-                    </div>
-                  </div>
-                </>
+                </div>
               )}
             </div>
             <div class="modal-footer">

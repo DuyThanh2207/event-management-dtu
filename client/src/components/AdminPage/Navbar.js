@@ -4,7 +4,6 @@ import {
   ProSidebar,
   Menu,
   MenuItem,
-  SubMenu,
   SidebarHeader,
   SidebarContent,
 } from "react-pro-sidebar";
@@ -65,23 +64,19 @@ const NavbarEvent = (props) => {
         </SidebarHeader>
         <SidebarContent>
           <Menu iconShape="circle">
-            <SubMenu title="Event" icon={<EventIcon />}>
-              <MenuItem active={true}>
-                <NavLink to="/event" activeStyle={{ fontWeight: "bold" }}>
-                  Event All
-                </NavLink>
-              </MenuItem>
-            </SubMenu>
-            <SubMenu title="Manage" icon={<SupervisorAccountIcon />}>
-              <MenuItem active={true}>
-                <NavLink
-                  activeStyle={{ fontWeight: "bold" }}
-                  to="/manage-account"
-                >
-                  Manage Account
-                </NavLink>
-              </MenuItem>
-            </SubMenu>
+            <MenuItem title="Event" icon={<EventIcon />}>
+              <NavLink to="/event" activeStyle={{ fontWeight: "bold" }}>
+                Event All
+              </NavLink>
+            </MenuItem>
+            <MenuItem title="Manage" icon={<SupervisorAccountIcon />}>
+              <NavLink
+                activeStyle={{ fontWeight: "bold" }}
+                to="/manage-account"
+              >
+                Manage Account
+              </NavLink>
+            </MenuItem>
           </Menu>
         </SidebarContent>
       </ProSidebar>
