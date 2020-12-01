@@ -12,15 +12,17 @@ import GiveTasks from "./pages/CenterPage/Tasks/GiveTasks";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "bootstrap-css-only/css/bootstrap.min.css";
 import "mdbreact/dist/css/mdb.css";
-import Finance from "./pages/CenterPage/Personal/Finance";
-import Chart from "./pages/CenterPage/Personal/Chart";
+import Finance from "./pages/CenterPage/Finance/Finance";
+import Chart from "./pages/CenterPage/Chart/Chart";
 import ChangePassword from "./pages/CenterPage/ChangeAccountInformation/ChangePassword";
 import ChangePasswordStaff from "./pages/StaffPage/AccountDetails/ChangePasswordStaff";
 import DetailsAccount from "./pages/CenterPage/ChangeAccountInformation/DetailsAccount";
+import EventShow from "./pages/CenterPage/Show/EventShow";
 import DetailsAccountStaff from "./pages/StaffPage/AccountDetails/DetailsAccountStaff";
 import EventStaff from "./pages/StaffPage/EventPage/EventStaff";
 import TaskStaff from "./pages/StaffPage/Tasks/TaskStaff";
 import DetailsAccountAdmin from "./pages/AdminPage/ChangeAccountInformation/DetailsAccountAdmin";
+import BlockedUser from "./pages/BlockedUser/BlockedUser";
 function App() {
   return (
     <Router>
@@ -34,12 +36,20 @@ function App() {
             {sessionStorage.getItem("account_role") === "DTU Event Center" && (
               <EventAllCenter />
             )}
+            {sessionStorage.getItem("account_role") === "Blocked" && (
+              <BlockedUser />
+            )}
             {sessionStorage.getItem("account_role") === "DTU Event Staff" && (
               <EventStaff />
             )}
           </PrivateRoute>
           <PrivateRoute exact path="/manage-account">
-            <ManageAccount />
+            {sessionStorage.getItem("account_role") === "Admin" && (
+              <ManageAccount />
+            )}
+            {sessionStorage.getItem("account_role") === "Blocked" && (
+              <BlockedUser />
+            )}
           </PrivateRoute>
           <PrivateRoute exact path="/change-password">
             {sessionStorage.getItem("account_role") === "Admin" && (
@@ -51,9 +61,17 @@ function App() {
             {sessionStorage.getItem("account_role") === "DTU Event Staff" && (
               <ChangePasswordStaff />
             )}
+            {sessionStorage.getItem("account_role") === "Blocked" && (
+              <BlockedUser />
+            )}
           </PrivateRoute>
           <PrivateRoute exact path="/team">
-            <Member />
+            {sessionStorage.getItem("account_role") === "DTU Event Center" && (
+              <Member />
+            )}
+            {sessionStorage.getItem("account_role") === "Blocked" && (
+              <BlockedUser />
+            )}
           </PrivateRoute>
           <PrivateRoute exact path="/task-all">
             {sessionStorage.getItem("account_role") === "DTU Event Center" && (
@@ -62,12 +80,33 @@ function App() {
             {sessionStorage.getItem("account_role") === "DTU Event Staff" && (
               <TaskStaff />
             )}
+            {sessionStorage.getItem("account_role") === "Blocked" && (
+              <BlockedUser />
+            )}
           </PrivateRoute>
           <PrivateRoute exact path="/finance">
-            <Finance />
+            {sessionStorage.getItem("account_role") === "DTU Event Center" && (
+              <Finance />
+            )}
+            {sessionStorage.getItem("account_role") === "Blocked" && (
+              <BlockedUser />
+            )}
+          </PrivateRoute>
+          <PrivateRoute exact path="/show">
+            {sessionStorage.getItem("account_role") === "DTU Event Center" && (
+              <EventShow />
+            )}
+            {sessionStorage.getItem("account_role") === "Blocked" && (
+              <BlockedUser />
+            )}
           </PrivateRoute>
           <PrivateRoute exact path="/chart">
-            <Chart />
+            {sessionStorage.getItem("account_role") === "DTU Event Center" && (
+              <Chart />
+            )}
+            {sessionStorage.getItem("account_role") === "Blocked" && (
+              <BlockedUser />
+            )}
           </PrivateRoute>
           <PrivateRoute exact path="/account-details">
             {sessionStorage.getItem("account_role") === "Admin" && (
@@ -78,6 +117,9 @@ function App() {
             )}
             {sessionStorage.getItem("account_role") === "DTU Event Staff" && (
               <DetailsAccountStaff />
+            )}
+            {sessionStorage.getItem("account_role") === "Blocked" && (
+              <BlockedUser />
             )}
           </PrivateRoute>
         </Switch>

@@ -37,6 +37,8 @@ const Login = () => {
             sessionStorage.getItem("account_role") === "DTU Event Staff"
           ) {
             history.push("/event");
+          } else if (sessionStorage.getItem("account_role") === "Blocked") {
+            history.push("/event");
           }
           window.location.reload();
         }

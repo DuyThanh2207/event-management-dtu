@@ -147,6 +147,10 @@ const EventAll = () => {
               );
             })}
           </div>
+          <div className="d-flex mb-3 justify-content-end">
+            <div className="btn btn-success">Add New Event</div>
+            <div className="btn btn-warning">Edit Event</div>
+          </div>
           <Paper>
             <Scheduler data={appointments}>
               <ViewState defaultCurrentDate={today} />

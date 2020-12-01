@@ -221,6 +221,7 @@ const ManageAccount = () => {
                 data={dataUser}
                 options={{
                   actionsColumnIndex: -1,
+                  filtering: true,
                 }}
                 editable={{
                   onRowDelete: (oldData) =>

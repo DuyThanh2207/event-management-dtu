@@ -21,24 +21,20 @@ import {
 } from "react-notifications";
 import "react-notifications/lib/notifications.css";
 import "./GiveTask.css";
-import ListSubheader from "@material-ui/core/ListSubheader";
 import Spinner from "react-bootstrap/Spinner";
 const axios = require("axios");
 const GiveTasks = () => {
-  const [status, setStatus] = useState("all");
   const [eventStatus, setEventStatus] = useState("availableEvent");
   const [taskAll, setTaskAll] = useState([]);
-  const [taskDone, setTaskDone] = useState([]);
-  const [taskFail, setTaskFail] = useState([]);
-  const [taskInProcess, setTaskInProcess] = useState([]);
   const [eventData, setEventData] = useState([]);
   const [eventId, setEventId] = useState();
   const [showAddTask, setShowAddTask] = useState(false);
   const [editStatus, setEditStatus] = useState(false);
   const [loading, setLoading] = useState(false);
   const [editData, setEditData] = useState();
+  const [eventTitle, setEventTitle] = useState("");
   const [columns, setColumns] = useState([
-    { title: "Task", field: "task_name" },
+    { title: "Task Name", field: "task_name" },
     { title: "Task Description", field: "task_description" },
     { title: "Start Date", field: "start_date", type: "date" },
     { title: "Deadline", field: "deadline", type: "date" },
@@ -57,8 +53,9 @@ const GiveTasks = () => {
     },
   ]);
   const [column, setColumn] = useState([
-    { title: "Task", field: "task_name" },
+    { title: "Task Name", field: "task_name" },
     { title: "Task Description", field: "task_description" },
+    { title: "Start Date", field: "start_date", type: "date" },
     { title: "Deadline", field: "deadline", type: "date" },
     { title: "Status", field: "status", editable: "never" },
     { title: "Staff", field: "staff_id" },
@@ -70,26 +67,6 @@ const GiveTasks = () => {
       })
       .then((res) => {
         setTaskAll(res.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    let dataDone = await axios
-      .post("/task-done", {
-        event_id: eventId,
-      })
-      .then((res) => {
-        setTaskDone(res.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    let dataInProcess = await axios
-      .post("/task-not-done", {
-        event_id: eventId,
-      })
-      .then((res) => {
-        setTaskInProcess(res.data);
       })
       .catch((error) => {
         console.log(error);
@@ -122,6 +99,9 @@ const GiveTasks = () => {
   const onHandledClick = (e) => {
     setLoading(true);
     setEventId(e.event_id);
+    let temp =
+      e.event_name + " start on " + e.event_date + " at " + e.event_time;
+    setEventTitle(temp);
     setTimeout(async () => {
       let data = await axios
         .post("/tasks-data", {
@@ -129,36 +109,6 @@ const GiveTasks = () => {
         })
         .then((res) => {
           setTaskAll(res.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      let dataDone = await axios
-        .post("/task-done", {
-          event_id: e.event_id,
-        })
-        .then((res) => {
-          setTaskDone(res.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      let dataInProcess = await axios
-        .post("/task-not-done", {
-          event_id: e.event_id,
-        })
-        .then((res) => {
-          setTaskInProcess(res.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      let dataFail = await axios
-        .post("/task-fail", {
-          event_id: e.event_id,
-        })
-        .then((res) => {
-          setTaskFail(res.data);
         })
         .catch((error) => {
           console.log(error);
@@ -254,7 +204,7 @@ const GiveTasks = () => {
                 <div className="card" style={{ width: "100%" }}>
                   <div className="card-body">
                     <div className="d-flex justify-content-center">
-                      <h2>EVENT</h2>
+                      <h2>TASK</h2>
                     </div>
                     <div className="d-flex justify-content-end">
                       <FormControl component="fieldset">
@@ -321,6 +271,11 @@ const GiveTasks = () => {
                       </List>
                     )}
                   </div>
+                  <div className="mb-2 mr-3 d-flex justify-content-end">
+                    <strong>
+                      <i>Click event to see task's details</i>
+                    </strong>
+                  </div>
                 </div>
               </div>
             </div>
@@ -342,135 +297,37 @@ const GiveTasks = () => {
                 </div>
               ) : (
                 <div>
-                  <div className="d-flex justify-content-between">
-                    <div className="btn-group mb-3">
-                      <button
-                        type="button"
-                        className="btn btn-success"
-                        onClick={() => setShowAddTask(!showAddTask)}
-                      >
-                        Add Task
-                      </button>
-                    </div>
-                    <div className="row ml-5">
-                      <FormControl component="fieldset">
-                        <RadioGroup
-                          row
-                          aria-label="position"
-                          name="position"
-                          defaultValue="all"
-                          onChange={(e) => setStatus(e.target.value)}
-                        >
-                          <FormControlLabel
-                            value="all"
-                            control={<Radio />}
-                            label="All"
-                          />
-                          <FormControlLabel
-                            value="done"
-                            control={<Radio />}
-                            label="Done"
-                          />
-                          <FormControlLabel
-                            value="inProcess"
-                            control={<Radio />}
-                            label="In Process"
-                          />
-                          <FormControlLabel
-                            value="fail"
-                            control={<Radio />}
-                            label="Fail"
-                          />
-                        </RadioGroup>
-                      </FormControl>
-                    </div>
+                  <div className="mb-3 d-flex justify-content-end">
+                    <button
+                      type="button"
+                      className="btn btn-success"
+                      onClick={() => setShowAddTask(!showAddTask)}
+                    >
+                      Add Task
+                    </button>
                   </div>
                   <div className="row mt-2">
                     <div className="col">
-                      {status === "all" && (
-                        <MaterialTable
-                          title="Task"
-                          columns={columns}
-                          data={taskAll}
-                          options={{
-                            actionsColumnIndex: -1,
-                          }}
-                          editable={{
-                            onRowDelete: (oldData) =>
-                              new Promise((resolve) => {
-                                setTimeout(() => {
-                                  const dataDelete = [...taskAll];
-                                  const index = oldData.tableData.id;
-                                  deleteTask(dataDelete[index].task_id);
-                                  resolve();
-                                }, 1000);
-                              }),
-                          }}
-                        />
-                      )}
-                      {status === "done" && (
-                        <MaterialTable
-                          title="Task"
-                          columns={columns}
-                          data={taskDone}
-                          options={{
-                            actionsColumnIndex: -1,
-                          }}
-                          editable={{
-                            onRowDelete: (oldData) =>
-                              new Promise((resolve) => {
-                                setTimeout(() => {
-                                  const dataDelete = [...taskDone];
-                                  const index = oldData.tableData.id;
-                                  deleteTask(dataDelete[index].task_id);
-                                  resolve();
-                                }, 1000);
-                              }),
-                          }}
-                        />
-                      )}
-                      {status === "inProcess" && (
-                        <MaterialTable
-                          title="Task"
-                          columns={columns}
-                          data={taskInProcess}
-                          options={{
-                            actionsColumnIndex: -1,
-                          }}
-                          editable={{
-                            onRowDelete: (oldData) =>
-                              new Promise((resolve) => {
-                                setTimeout(() => {
-                                  const dataDelete = [...taskInProcess];
-                                  const index = oldData.tableData.id;
-                                  deleteTask(dataDelete[index].task_id);
-                                  resolve();
-                                }, 1000);
-                              }),
-                          }}
-                        />
-                      )}
-                      {status === "fail" && (
-                        <MaterialTable
-                          title="Task"
-                          columns={columns}
-                          data={taskFail}
-                          options={{
-                            actionsColumnIndex: -1,
-                          }}
-                          editable={{
-                            onRowDelete: (oldData) =>
-                              new Promise((resolve) => {
-                                setTimeout(() => {
-                                  const dataDelete = [...taskFail];
-                                  const index = oldData.tableData.id;
-                                  deleteTask(dataDelete[index].task_id);
-                                  resolve();
-                                }, 1000);
-                              }),
-                          }}
-                        />
-                      )}
+                      <MaterialTable
+                        title={eventTitle}
+                        columns={columns}
+                        data={taskAll}
+                        options={{
+                          filtering: true,
+                          actionsColumnIndex: -1,
+                        }}
+                        editable={{
+                          onRowDelete: (oldData) =>
+                            new Promise((resolve) => {
+                              setTimeout(() => {
+                                const dataDelete = [...taskAll];
+                                const index = oldData.tableData.id;
+                                deleteTask(dataDelete[index].task_id);
+                                resolve();
+                              }, 1000);
+                            }),
+                        }}
+                      />
                     </div>
                     {showAddTask && (
                       <div className="col-3">
@@ -518,65 +375,16 @@ const GiveTasks = () => {
                   <Spinner animation="border" />
                 </div>
               ) : (
-                <div>
-                  <div className="row ml-5">
-                    <FormControl component="fieldset">
-                      <RadioGroup
-                        row
-                        aria-label="position"
-                        name="position"
-                        defaultValue="all"
-                        onChange={(e) => setStatus(e.target.value)}
-                      >
-                        <FormControlLabel
-                          value="all"
-                          control={<Radio />}
-                          label="All"
-                        />
-                        <FormControlLabel
-                          value="done"
-                          control={<Radio />}
-                          label="Done"
-                        />
-                        <FormControlLabel
-                          value="fail"
-                          control={<Radio />}
-                          label="Fail"
-                        />
-                      </RadioGroup>
-                    </FormControl>
-                  </div>
-                  <div className="row mt-2">
-                    <div className="col">
-                      {status === "all" && (
-                        <MaterialTable
-                          title="Task"
-                          columns={column}
-                          data={taskAll}
-                        />
-                      )}
-                      {status === "done" && (
-                        <MaterialTable
-                          title="Task"
-                          columns={column}
-                          data={taskDone}
-                        />
-                      )}
-                      {status === "inProcess" && (
-                        <MaterialTable
-                          title="Task"
-                          columns={column}
-                          data={taskInProcess}
-                        />
-                      )}
-                      {status === "fail" && (
-                        <MaterialTable
-                          title="Task"
-                          columns={column}
-                          data={taskFail}
-                        />
-                      )}
-                    </div>
+                <div className="row mt-2">
+                  <div className="col">
+                    <MaterialTable
+                      title={eventTitle}
+                      columns={column}
+                      data={taskAll}
+                      options={{
+                        filtering: true,
+                      }}
+                    />
                   </div>
                 </div>
               )}

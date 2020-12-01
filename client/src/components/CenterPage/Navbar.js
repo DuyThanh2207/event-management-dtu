@@ -13,8 +13,11 @@ import CloseIcon from "@material-ui/icons/Close";
 import EventIcon from "@material-ui/icons/Event";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
+import CreditCardIcon from "@material-ui/icons/CreditCard";
 import PersonIcon from "@material-ui/icons/Person";
+import BarChartIcon from '@material-ui/icons/BarChart';
 import "../Navbar.scss";
+import EventNoteIcon from "@material-ui/icons/EventNote";
 import { useState } from "react";
 const Navbar = (props) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -67,39 +70,36 @@ const Navbar = (props) => {
         </SidebarHeader>
         <SidebarContent>
           <Menu iconShape="circle">
-            <SubMenu title="Event" icon={<EventIcon />}>
-              <MenuItem active={true}>
-                <NavLink to="/event" activeStyle={{ fontWeight: "bold" }}>
-                  Event All
-                </NavLink>
-              </MenuItem>
-            </SubMenu>
-            <SubMenu title="Team Member" icon={<SupervisorAccountIcon />}>
-              <MenuItem active={true}>
-                <NavLink activeStyle={{ fontWeight: "bold" }} to="/team">
-                  Member
-                </NavLink>
-              </MenuItem>
-            </SubMenu>
-            <SubMenu title="Task" icon={<AssignmentTurnedInIcon />}>
-              <MenuItem active={true}>
-                <NavLink activeStyle={{ fontWeight: "bold" }} to="/task-all">
-                  Give Task
-                </NavLink>
-              </MenuItem>
-            </SubMenu>
-            <SubMenu title="Personal" icon={<PersonIcon />}>
-              <MenuItem active={true}>
-                <NavLink activeStyle={{ fontWeight: "bold" }} to="/finance">
-                  Finance
-                </NavLink>
-              </MenuItem>
-              <MenuItem>
-                <NavLink activeStyle={{ fontWeight: "bold" }} to="/chart">
-                  Chart
-                </NavLink>
-              </MenuItem>
-            </SubMenu>
+            <MenuItem title="Event" icon={<EventIcon />}>
+              <NavLink to="/event" activeStyle={{ fontWeight: "bold" }}>
+                Event All
+              </NavLink>
+            </MenuItem>
+            <MenuItem title="Team Member" icon={<SupervisorAccountIcon />}>
+              <NavLink activeStyle={{ fontWeight: "bold" }} to="/team">
+                Member
+              </NavLink>
+            </MenuItem>
+            <MenuItem title="Task" icon={<AssignmentTurnedInIcon />}>
+              <NavLink activeStyle={{ fontWeight: "bold" }} to="/task-all">
+                Task
+              </NavLink>
+            </MenuItem>
+            <MenuItem title="Event's Show" icon={<EventNoteIcon />}>
+              <NavLink activeStyle={{ fontWeight: "bold" }} to="/show">
+                Event's Show
+              </NavLink>
+            </MenuItem>
+            <MenuItem title="Event's Show" icon={<CreditCardIcon />}>
+              <NavLink activeStyle={{ fontWeight: "bold" }} to="/finance">
+                Finance
+              </NavLink>
+            </MenuItem>
+            <MenuItem title="Event's Show" icon={<BarChartIcon />}>
+              <NavLink activeStyle={{ fontWeight: "bold" }} to="/chart">
+                Chart
+              </NavLink>
+            </MenuItem>
           </Menu>
         </SidebarContent>
       </ProSidebar>
