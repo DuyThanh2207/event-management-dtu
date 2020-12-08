@@ -44,15 +44,15 @@ const EditTask = (props) => {
   }, []);
   const getEditAccount = () => {
     let tempData = staffTemp.join(", ");
-    var deadlineTemp = new Date(deadline);
-    var dd = String(deadline.getDate()).padStart(2, "0");
-    var mm = String(deadline.getMonth() + 1).padStart(2, "0"); //January is 0!
-    var yyyy = deadline.getFullYear();
-    deadlineTemp = yyyy + "-" + mm + "-" + dd;
-    var startDateTemp = new Date(startDate);
-    var dd = String(startDate.getDate()).padStart(2, "0");
-    var mm = String(startDate.getMonth() + 1).padStart(2, "0"); //January is 0!
-    var yyyy = startDate.getFullYear();
+    let deadlineTemp = new Date(deadline);
+    let ddDeadline = String(deadline.getDate()).padStart(2, "0");
+    let mmDeadline = String(deadline.getMonth() + 1).padStart(2, "0"); //January is 0!
+    let yyyyDeadline = deadline.getFullYear();
+    deadlineTemp = yyyyDeadline + "-" + mmDeadline + "-" + ddDeadline;
+    let startDateTemp = new Date(startDate);
+    let dd = String(startDate.getDate()).padStart(2, "0");
+    let mm = String(startDate.getMonth() + 1).padStart(2, "0"); //January is 0!
+    let yyyy = startDate.getFullYear();
     startDateTemp = yyyy + "-" + mm + "-" + dd;
     let temp = {
       task_name: taskName,
@@ -66,23 +66,23 @@ const EditTask = (props) => {
     props.getEditTaskData(temp);
   };
   const getDeadline = () => {
-    var temp = props.editData.deadline.replaceAll("-", ",");
-    var dateTemp = temp.split(",");
-    var dd = dateTemp[0];
-    var mm = dateTemp[1];
-    var yyyy = dateTemp[2];
-    var today = yyyy + "," + mm + "," + dd;
-    var date = new Date(today);
+    let temp = props.editData.deadline.replaceAll("-", ",");
+    let dateTemp = temp.split(",");
+    let dd = dateTemp[0];
+    let mm = dateTemp[1];
+    let yyyy = dateTemp[2];
+    let today = yyyy + "," + mm + "," + dd;
+    let date = new Date(today);
     setDeadline(date);
   };
   const getStartDate = () => {
-    var temp = props.editData.start_date.replaceAll("-", ",");
-    var dateTemp = temp.split(",");
-    var dd = dateTemp[0];
-    var mm = dateTemp[1];
-    var yyyy = dateTemp[2];
-    var today = yyyy + "," + mm + "," + dd;
-    var date = new Date(today);
+    let temp = props.editData.start_date.replaceAll("-", ",");
+    let dateTemp = temp.split(",");
+    let dd = dateTemp[0];
+    let mm = dateTemp[1];
+    let yyyy = dateTemp[2];
+    let today = yyyy + "," + mm + "," + dd;
+    let date = new Date(today);
     setStartDate(date);
   };
   return (
@@ -145,7 +145,7 @@ const EditTask = (props) => {
                 />
               </Grid>
             </MuiPickersUtilsProvider>
-            <label>Staff *</label>
+            <label>Staff</label>
             <Multiselect
               value={staffTemp}
               data={staffData}

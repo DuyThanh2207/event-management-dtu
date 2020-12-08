@@ -11,6 +11,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import CloseIcon from "@material-ui/icons/Close";
 import EventIcon from "@material-ui/icons/Event";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
+import ReportIcon from "@material-ui/icons/Report";
 import "../Navbar.scss";
 import { useState } from "react";
 const axios = require("axios");
@@ -20,7 +21,7 @@ const Navbar = (props) => {
   useEffect(() => {
     axios
       .post("/task-staff-inprocess", {
-        staff_id: sessionStorage.getItem("account_username"),
+        staff_id: "%" + sessionStorage.getItem("account_username") + "%",
       })
       .then((res) => {
         if (!res.data.message) {
@@ -92,6 +93,11 @@ const Navbar = (props) => {
             >
               <NavLink activeStyle={{ fontWeight: "bold" }} to="/task-all">
                 Task
+              </NavLink>
+            </MenuItem>
+            <MenuItem title="Report" icon={<ReportIcon />}>
+              <NavLink to="/report" activeStyle={{ fontWeight: "bold" }}>
+                Report
               </NavLink>
             </MenuItem>
           </Menu>

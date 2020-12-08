@@ -36,15 +36,15 @@ const AddTask = (props) => {
   }, []);
   const getCreateTask = (data) => {
     let tempData = staffTask.join(", ");
-    var deadline = new Date(selectedDeadline);
-    var dd = String(deadline.getDate()).padStart(2, "0");
-    var mm = String(deadline.getMonth() + 1).padStart(2, "0"); //January is 0!
-    var yyyy = deadline.getFullYear();
-    deadline = yyyy + "-" + mm + "-" + dd;
-    var startDate = new Date(selectedStartDate);
-    var dd = String(startDate.getDate()).padStart(2, "0");
-    var mm = String(startDate.getMonth() + 1).padStart(2, "0"); //January is 0!
-    var yyyy = startDate.getFullYear();
+    let deadline = new Date(selectedDeadline);
+    let ddDeadline = String(deadline.getDate()).padStart(2, "0");
+    let mmDeadline = String(deadline.getMonth() + 1).padStart(2, "0"); //January is 0!
+    let yyyyDeadline = deadline.getFullYear();
+    deadline = yyyyDeadline + "-" + mmDeadline + "-" + ddDeadline;
+    let startDate = new Date(selectedStartDate);
+    let dd = String(startDate.getDate()).padStart(2, "0");
+    let mm = String(startDate.getMonth() + 1).padStart(2, "0"); //January is 0!
+    let yyyy = startDate.getFullYear();
     startDate = yyyy + "-" + mm + "-" + dd;
     let temp = {
       task_name: taskName,
@@ -115,7 +115,7 @@ const AddTask = (props) => {
                 />
               </Grid>
             </MuiPickersUtilsProvider>
-            <label>Staff *</label>
+            <label>Staff</label>
             <Multiselect
               data={staffData}
               onChange={(value) => setStaffTask(value)}

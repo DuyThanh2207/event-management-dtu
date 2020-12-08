@@ -9,15 +9,17 @@ const CreateAccountForm = (props) => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
-  const [color, setColor] = useState("");
+  const [color, setColor] = useState("#000000");
   const getCreateAccount = () => {
+    let colorTemp = color;
+    if (role !== "DTU Event Center") colorTemp = "";
     let data = {
       account_username: username,
       account_password: password,
       account_name: name,
       account_email: email,
       account_role: role,
-      account_color: color,
+      account_color: colorTemp,
     };
     props.getAddData(data);
   };
@@ -90,6 +92,7 @@ const CreateAccountForm = (props) => {
         <br />
         {role === "DTU Event Center" && (
           <div>
+            <div className="mb-1">Please select account's color</div>
             <SliderPicker
               color={color}
               onChangeComplete={(color) => setColor(color.hex)}
