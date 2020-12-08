@@ -9,19 +9,29 @@ import "react-notifications/lib/notifications.css";
 import EditIcon from "@material-ui/icons/Edit";
 import EditAccountForm from "./../../../components/AdminPage/ManageAccount/EditAccountFrom";
 import BlockIcon from "@material-ui/icons/Block";
+import MenuItem from "@material-ui/core/MenuItem";
 import {
   NotificationContainer,
   NotificationManager,
 } from "react-notifications";
 import Modal from "react-bootstrap/Modal";
 import Button from "@material-ui/core/Button";
+import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 const axios = require("axios");
 const ManageAccount = () => {
+  const [open, setOpen] = useState(false);
   const [show, setShow] = useState(false);
   const [createStatus, setCreateStatus] = useState(false);
   const [editStatus, setEditStatus] = useState(false);
   const [dataUser, setDataUser] = useState([]);
   const [editUser, setEditUser] = useState([]);
+  const [selectedCenter, setSelectedCenter] = useState();
+  const [anotherCenter, setAnotherCenter] = useState();
   const [columns, setColumns] = useState([
     { title: "Account", field: "account_username" },
     { title: "Name", field: "account_name" },
@@ -84,40 +94,71 @@ const ManageAccount = () => {
       );
   };
   const blockUser = (rowData) => {
-    if (window.confirm("Are you sure block this user ?"))
-      if (
-        rowData.account_username.toLowerCase() ===
-        sessionStorage.getItem("account_username").toLowerCase()
-      )
-        NotificationManager.error(
-          "You can't block your account",
-          "Error",
-          3000
-        );
-      else {
-        axios
-          .post("/block-user", {
-            account_username: rowData.account_username.toLowerCase(),
-          })
-          .then((res) => {
-            if (res.data.message) {
-              NotificationManager.error(res.data.message, "Error", 3000);
-            } else {
-              NotificationManager.success("Complete !", "Success", 3000);
-              setCreateStatus(false);
-              fetchData();
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
+    if (rowData.account_role === "DTU Event Center") {
+      setSelectedCenter(rowData.account_username);
+      setOpen(true);
+    } else {
+      if (window.confirm("Are you sure block this user ?"))
+        if (
+          rowData.account_username.toLowerCase() ===
+          sessionStorage.getItem("account_username").toLowerCase()
+        )
+          NotificationManager.error(
+            "You can't block your account",
+            "Error",
+            3000
+          );
+        else {
+          axios
+            .post("/block-user", {
+              account_username: rowData.account_username.toLowerCase(),
+            })
+            .then((res) => {
+              if (res.data.message) {
+                NotificationManager.error(res.data.message, "Error", 3000);
+              } else {
+                NotificationManager.success("Complete !", "Success", 3000);
+                fetchData();
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+    }
+  };
+  const blockCenter = () => {
+    axios
+      .post("/block-user", {
+        account_username: selectedCenter.toLowerCase(),
+        account_role: "DTU Event Center",
+        account_username_another: anotherCenter.toLowerCase(),
+      })
+      .then((res) => {
+        if (res.data.message) {
+          NotificationManager.error(res.data.message, "Error", 3000);
+        } else {
+          NotificationManager.success("Complete !", "Success", 3000);
+          setOpen(false);
+          fetchData();
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
   const getAddData = (data) => {
     axios
       .post("/create-user", {
         account_name: data.account_name,
-        account_username: data.account_username.toLowerCase(),
+        account_username: data.account_username
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/đ/g, "d")
+          .replace(/Đ/g, "D")
+          .replace(/\s/g, "")
+          .replace(/[^a-z0-9\s]/gi, "")
+          .toLowerCase(),
         account_password: data.account_password,
         account_email: data.account_email,
         account_role: data.account_role,
@@ -196,6 +237,9 @@ const ManageAccount = () => {
         console.log(error);
       });
   };
+  var centerAccount = dataUser.filter(
+    (item) => item.account_role === "DTU Event Center"
+  );
   return (
     <div className="app">
       <Navbar />
@@ -249,6 +293,58 @@ const ManageAccount = () => {
                 </Button>
               </Modal.Footer>
             </Modal>
+            <Dialog
+              open={open}
+              onClose={() => setOpen(false)}
+              aria-labelledby="form-dialog-title"
+            >
+              <DialogTitle id="form-dialog-title">Warning !!! </DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  If you want block this Event Center, you must give future
+                  events of this Event Center to another
+                </DialogContentText>
+                <ValidatorForm
+                  onSubmit={() => blockCenter()}
+                  style={{ width: "100%", height: "100%" }}
+                >
+                  <TextValidator
+                    autoFocus
+                    margin="dense"
+                    select
+                    value={anotherCenter}
+                    label="Event Center *"
+                    onChange={(e) => setAnotherCenter(e.target.value)}
+                    fullWidth
+                    validators={["required"]}
+                    errorMessages={["This field is required"]}
+                  >
+                    {centerAccount
+                      .filter(
+                        (item) => item.account_username !== selectedCenter
+                      )
+                      .map((account) => {
+                        return (
+                          <MenuItem
+                            key={account.account_username}
+                            value={account.account_username}
+                          >
+                            {account.account_name}
+                          </MenuItem>
+                        );
+                      })}
+                  </TextValidator>
+                  <div className="mt-2">
+                    <Button type="submit" color="primary">
+                      Submit
+                    </Button>
+                    <Button onClick={() => setOpen(false)} color="primary">
+                      Cancel
+                    </Button>
+                  </div>
+                </ValidatorForm>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
         <Footer />

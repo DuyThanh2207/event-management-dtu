@@ -7,6 +7,10 @@ import {
   SidebarHeader,
   SidebarContent,
 } from "react-pro-sidebar";
+import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
+import CreditCardIcon from "@material-ui/icons/CreditCard";
+import BarChartIcon from "@material-ui/icons/BarChart";
+import EventNoteIcon from "@material-ui/icons/EventNote";
 import MenuIcon from "@material-ui/icons/Menu";
 import CloseIcon from "@material-ui/icons/Close";
 import EventIcon from "@material-ui/icons/Event";
@@ -75,6 +79,26 @@ const NavbarEvent = (props) => {
                 to="/manage-account"
               >
                 Manage Account
+              </NavLink>
+            </MenuItem>
+            <MenuItem title="Task" icon={<AssignmentTurnedInIcon />}>
+              <NavLink activeStyle={{ fontWeight: "bold" }} to="/task-all">
+                Task
+              </NavLink>
+            </MenuItem>
+            <MenuItem title="Event's Show" icon={<EventNoteIcon />}>
+              <NavLink activeStyle={{ fontWeight: "bold" }} to="/show">
+                Event's Show
+              </NavLink>
+            </MenuItem>
+            <MenuItem title="Finance" icon={<CreditCardIcon />}>
+              <NavLink activeStyle={{ fontWeight: "bold" }} to="/finance">
+                Finance
+              </NavLink>
+            </MenuItem>
+            <MenuItem title="Chart" icon={<BarChartIcon />}>
+              <NavLink activeStyle={{ fontWeight: "bold" }} to="/chart">
+                Chart
               </NavLink>
             </MenuItem>
           </Menu>

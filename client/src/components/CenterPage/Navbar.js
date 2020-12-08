@@ -4,7 +4,6 @@ import {
   ProSidebar,
   Menu,
   MenuItem,
-  SubMenu,
   SidebarHeader,
   SidebarContent,
 } from "react-pro-sidebar";
@@ -14,8 +13,7 @@ import EventIcon from "@material-ui/icons/Event";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import CreditCardIcon from "@material-ui/icons/CreditCard";
-import PersonIcon from "@material-ui/icons/Person";
-import BarChartIcon from '@material-ui/icons/BarChart';
+import BarChartIcon from "@material-ui/icons/BarChart";
 import "../Navbar.scss";
 import EventNoteIcon from "@material-ui/icons/EventNote";
 import { useState } from "react";
@@ -90,12 +88,12 @@ const Navbar = (props) => {
                 Event's Show
               </NavLink>
             </MenuItem>
-            <MenuItem title="Event's Show" icon={<CreditCardIcon />}>
+            <MenuItem title="Finance" icon={<CreditCardIcon />}>
               <NavLink activeStyle={{ fontWeight: "bold" }} to="/finance">
                 Finance
               </NavLink>
             </MenuItem>
-            <MenuItem title="Event's Show" icon={<BarChartIcon />}>
+            <MenuItem title="Chart" icon={<BarChartIcon />}>
               <NavLink activeStyle={{ fontWeight: "bold" }} to="/chart">
                 Chart
               </NavLink>

@@ -23,6 +23,11 @@ import EventStaff from "./pages/StaffPage/EventPage/EventStaff";
 import TaskStaff from "./pages/StaffPage/Tasks/TaskStaff";
 import DetailsAccountAdmin from "./pages/AdminPage/ChangeAccountInformation/DetailsAccountAdmin";
 import BlockedUser from "./pages/BlockedUser/BlockedUser";
+import Task from "./pages/AdminPage/Task/Task";
+import Show from "./pages/AdminPage/Show/Show";
+import FinanceAdmin from "./pages/AdminPage/Finance/FinanceAdmin";
+import ChartAdmin from "./pages/AdminPage/Chart/ChartAdmin";
+import ReportStaff from "./pages/StaffPage/Report/ReportStaff";
 function App() {
   return (
     <Router>
@@ -80,6 +85,7 @@ function App() {
             {sessionStorage.getItem("account_role") === "DTU Event Staff" && (
               <TaskStaff />
             )}
+            {sessionStorage.getItem("account_role") === "Admin" && <Task />}
             {sessionStorage.getItem("account_role") === "Blocked" && (
               <BlockedUser />
             )}
@@ -87,6 +93,9 @@ function App() {
           <PrivateRoute exact path="/finance">
             {sessionStorage.getItem("account_role") === "DTU Event Center" && (
               <Finance />
+            )}
+            {sessionStorage.getItem("account_role") === "Admin" && (
+              <FinanceAdmin />
             )}
             {sessionStorage.getItem("account_role") === "Blocked" && (
               <BlockedUser />
@@ -96,6 +105,7 @@ function App() {
             {sessionStorage.getItem("account_role") === "DTU Event Center" && (
               <EventShow />
             )}
+            {sessionStorage.getItem("account_role") === "Admin" && <Show />}
             {sessionStorage.getItem("account_role") === "Blocked" && (
               <BlockedUser />
             )}
@@ -103,6 +113,9 @@ function App() {
           <PrivateRoute exact path="/chart">
             {sessionStorage.getItem("account_role") === "DTU Event Center" && (
               <Chart />
+            )}
+            {sessionStorage.getItem("account_role") === "Admin" && (
+              <ChartAdmin />
             )}
             {sessionStorage.getItem("account_role") === "Blocked" && (
               <BlockedUser />
@@ -117,6 +130,14 @@ function App() {
             )}
             {sessionStorage.getItem("account_role") === "DTU Event Staff" && (
               <DetailsAccountStaff />
+            )}
+            {sessionStorage.getItem("account_role") === "Blocked" && (
+              <BlockedUser />
+            )}
+          </PrivateRoute>
+          <PrivateRoute exact path="/report">
+            {sessionStorage.getItem("account_role") === "DTU Event Staff" && (
+              <ReportStaff />
             )}
             {sessionStorage.getItem("account_role") === "Blocked" && (
               <BlockedUser />

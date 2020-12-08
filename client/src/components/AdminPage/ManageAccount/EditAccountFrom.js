@@ -23,6 +23,27 @@ const EditAccountForm = (props) => {
     };
     props.getEditUser(data);
   };
+  const selectRole = () => {
+    if (props.editUser.account_role === "Blocked")
+      if (props.editUser.account_color !== "")
+        return (
+          <MenuItem key="DTU Event Center" value="DTU Event Center">
+            DTU Event Center
+          </MenuItem>
+        );
+      else if (props.editUser.is_admin === "true")
+        return (
+          <MenuItem key="Admin" value="Admin">
+            Admin
+          </MenuItem>
+        );
+      else
+        return (
+          <MenuItem key="DTU Event Staff" value="DTU Event Staff">
+            DTU Event Staff
+          </MenuItem>
+        );
+  };
   return (
     <div style={{ width: "90%" }}>
       <ValidatorForm
@@ -77,19 +98,28 @@ const EditAccountForm = (props) => {
           validators={["required"]}
           errorMessages={["This field is required"]}
         >
-          <MenuItem key="DTU Event Center" value="DTU Event Center">
-            DTU Event Center
-          </MenuItem>
-          <MenuItem key="DTU Event Staff" value="DTU Event Staff">
-            DTU Event Staff
-          </MenuItem>
-          <MenuItem key="Admin" value="Admin">
-            Admin
-          </MenuItem>
+          {props.editUser.account_role === "DTU Event Center" && (
+            <MenuItem key="DTU Event Center" value="DTU Event Center">
+              DTU Event Center
+            </MenuItem>
+          )}
+          {props.editUser.account_role === "DTU Event Staff" && (
+            <MenuItem key="DTU Event Staff" value="DTU Event Staff">
+              DTU Event Staff
+            </MenuItem>
+          )}
+          {props.editUser.account_role === "Admin" && (
+            <MenuItem key="Admin" value="Admin">
+              Admin
+            </MenuItem>
+          )}
+          {selectRole()}
         </TextValidator>
         <br />
         {role === "DTU Event Center" && (
           <div>
+            <div className="mb-1">Please select account's color</div>
+            <br />
             <SliderPicker
               color={color}
               onChangeComplete={(color) => setColor(color.hex)}
