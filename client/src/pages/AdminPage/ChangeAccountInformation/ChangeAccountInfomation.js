@@ -9,6 +9,7 @@ import {
   NotificationContainer,
   NotificationManager,
 } from "react-notifications";
+//[Frontend] UI for Change Password 
 const axios = require("axios");
 const ChangeAccountInformation = () => {
   const [oldPassword, setOldPassword] = useState();
