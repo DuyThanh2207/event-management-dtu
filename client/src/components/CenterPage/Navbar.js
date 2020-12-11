@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { NavLink, Link } from "react-router-dom";
 import {
   ProSidebar,
@@ -17,8 +17,25 @@ import BarChartIcon from "@material-ui/icons/BarChart";
 import "../Navbar.scss";
 import EventNoteIcon from "@material-ui/icons/EventNote";
 import { useState } from "react";
+import ReportIcon from "@material-ui/icons/Report";
+const axios = require("axios");
 const Navbar = (props) => {
   const [collapsed, setCollapsed] = useState(false);
+  const [number, setNumber] = useState(0);
+  useEffect(() => {
+    axios
+      .post("/report-center", {
+        center_username: sessionStorage.getItem("account_username"),
+      })
+      .then((res) => {
+        if (!res.data.message) {
+          setNumber(res.data.length);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  });
   return (
     <>
       <ProSidebar
@@ -96,6 +113,15 @@ const Navbar = (props) => {
             <MenuItem title="Chart" icon={<BarChartIcon />}>
               <NavLink activeStyle={{ fontWeight: "bold" }} to="/chart">
                 Chart
+              </NavLink>
+            </MenuItem>
+            <MenuItem
+              title="Report"
+              icon={<ReportIcon />}
+              suffix={<span className="badge red">{number}</span>}
+            >
+              <NavLink to="/report" activeStyle={{ fontWeight: "bold" }}>
+                Report
               </NavLink>
             </MenuItem>
           </Menu>

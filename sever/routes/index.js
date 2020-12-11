@@ -192,6 +192,19 @@ router.post("/delete-user", (req, res) => {
         }
     );
 });
+router.post("/test", (req, res) => {
+    connection.query(
+        "SELECT event_id FROM emd_event WHERE DATE_FORMAT(event_date, '%Y-%m-%d') > ?", [today],
+        (err, response) => {
+            if (err) res.send({ message: "Can't delete account" });
+            else {
+                let temp = [];
+                response.forEach((item) => temp.push(item.event_id));
+                res.send(temp);
+            }
+        }
+    );
+});
 router.post("/block-user", (req, res) => {
     const account_username = req.body.account_username;
     const account_role = req.body.account_role;
@@ -203,10 +216,25 @@ router.post("/block-user", (req, res) => {
             else {
                 if (account_role === "DTU Event Center") {
                     connection.query(
-                        "UPDATE emd_event SET center_username = ? WHERE DATE_FORMAT(event_date, '%Y-%m-%d') > ? AND center_username = ?", [account_username_another, today, account_username],
+                        "SELECT event_id FROM emd_event WHERE DATE_FORMAT(event_date, '%Y-%m-%d') > ? AND center_username = ?", [today, account_username],
                         (err, response) => {
                             if (err) res.send({ message: "Can't delete account" });
-                            else res.send(response);
+                            else {
+                                let temp = [];
+                                response.forEach((item) => temp.push(item.event_id));
+                                temp.forEach((item) => {
+                                    connection.query("DELETE FROM task WHERE event_id = ?", [
+                                        item,
+                                    ]);
+                                });
+                                connection.query(
+                                    "UPDATE emd_event SET center_username = ? WHERE DATE_FORMAT(event_date, '%Y-%m-%d') > ? AND center_username = ?", [account_username_another, today, account_username],
+                                    (err, response) => {
+                                        if (err) res.send({ message: "Can't delete account" });
+                                        else res.send(response);
+                                    }
+                                );
+                            }
                         }
                     );
                 } else res.send(response);
@@ -272,7 +300,7 @@ router.post("/change-password", (req, res) => {
 router.post("/account-details", (req, res) => {
     const account_username = req.body.account_username;
     connection.query(
-        "SELECT DISTINCT account_name, account_email FROM emd.account where account_username = ?", [account_username],
+        "SELECT DISTINCT account_name, account_email, account_color FROM emd.account WHERE account_username = ?", [account_username],
         (err, response) => {
             if (err) res.send({ message: "Can't show data" });
             else res.send(response);
@@ -291,7 +319,61 @@ router.post("/edit-account-details", (req, res) => {
         }
     );
 });
+router.post("/edit-center-details", (req, res) => {
+    const account_username = req.body.account_username;
+    const account_name = req.body.account_name;
+    const account_email = req.body.account_email;
+    const account_color = req.body.account_color;
+    connection.query(
+        "UPDATE account SET account_name = ?, account_email = ?, account_color = ? WHERE account_username = ?", [account_name, account_email, account_color, account_username],
+        (err, response) => {
+            if (err) res.send({ message: "Can't update account" });
+            else res.send(response);
+        }
+    );
+});
+router.post("/check-email", (req, res) => {
+    const account_email = req.body.account_email;
+    connection.query(
+        "SELECT account_email FROM account WHERE account_email = ?", [account_email],
+        (err, response) => {
+            if (err) res.send({ message: "Can't show data" });
+            else res.send(response);
+        }
+    );
+});
+router.post("/update-password", (req, res) => {
+    const account_password = req.body.account_password;
+    const account_email = req.body.account_email;
+    connection.query(
+        "UPDATE account SET account_password = ? WHERE account_email = ?", [account_password, account_email],
+        (err, response) => {
+            if (err) res.send({ message: "Can't show data" });
+            else res.send(response);
+        }
+    );
+});
 //Role Center
+router.post("/report-center", (req, res) => {
+    const center_username = req.body.center_username;
+    connection.query(
+        "SELECT a.id, a.report_detail, a.report_time, b.event_name, c.task_name, b.center_username, a.annunciator, a.report_handle FROM report a, emd_event b, task c WHERE a.event_id = b.event_id AND a.task_id = c.task_id AND b.center_username = ? AND a.report_handle IS NULL", [center_username],
+        (err, response) => {
+            if (err) res.send({ message: "Can't show data" });
+            else res.send(response);
+        }
+    );
+});
+router.post("/report-list", (req, res) => {
+    const center_username = req.body.center_username;
+    connection.query(
+        "SELECT a.id, a.report_detail, a.report_time, b.event_name, c.task_name, b.center_username, a.annunciator, a.report_handle FROM report a, emd_event b, task c WHERE a.event_id = b.event_id AND a.task_id = c.task_id AND b.center_username = ?", [center_username],
+        (err, response) => {
+            if (err) res.send({ message: "Can't show data" });
+            else res.send(response);
+        }
+    );
+});
 router.post("/event-center", (req, res) => {
     const account_username = req.body.account_username;
     connection.query(
@@ -667,6 +749,16 @@ router.post("/finance-profit", (req, res) => {
         "SELECT DISTINCT a.event_name, sum(b.finance_spending) as profit FROM emd_event a LEFT JOIN finance b ON a.event_id = b.event_id WHERE a.center_username = ? GROUP BY (a.event_name)", [center_username],
         (err, response) => {
             if (err) res.send({ message: "Can't show data" });
+            else res.send(response);
+        }
+    );
+});
+router.post("/update-report", (req, res) => {
+    const id = req.body.id;
+    connection.query(
+        'UPDATE report SET report_handle = "Solved" WHERE id = ?', [id],
+        (err, response) => {
+            if (err) res.send({ message: err });
             else res.send(response);
         }
     );

@@ -28,6 +28,8 @@ import Show from "./pages/AdminPage/Show/Show";
 import FinanceAdmin from "./pages/AdminPage/Finance/FinanceAdmin";
 import ChartAdmin from "./pages/AdminPage/Chart/ChartAdmin";
 import ReportStaff from "./pages/StaffPage/Report/ReportStaff";
+import ReportCenter from "./pages/CenterPage/Report/ReportCenter";
+import ForgotPassword from "./pages/LoginPage/ForgotPassword";
 function App() {
   return (
     <Router>
@@ -35,6 +37,9 @@ function App() {
         <Switch>
           <PublicRouter exact path="/">
             <Login />
+          </PublicRouter>
+          <PublicRouter exact path="/forgot-password">
+            <ForgotPassword />
           </PublicRouter>
           <PrivateRoute exact path="/event">
             {sessionStorage.getItem("account_role") === "Admin" && <EventAll />}
@@ -138,6 +143,9 @@ function App() {
           <PrivateRoute exact path="/report">
             {sessionStorage.getItem("account_role") === "DTU Event Staff" && (
               <ReportStaff />
+            )}
+            {sessionStorage.getItem("account_role") === "DTU Event Center" && (
+              <ReportCenter />
             )}
             {sessionStorage.getItem("account_role") === "Blocked" && (
               <BlockedUser />
