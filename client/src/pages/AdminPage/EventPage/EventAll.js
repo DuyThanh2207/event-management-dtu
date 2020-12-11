@@ -184,6 +184,7 @@ const EventAll = () => {
         }
       });
   };
+  //[Server/Backend] edit Event
   var eventEdit = eventData.filter((item) => new Date(item.time) >= new Date());
   const editEventForm = () => {
     var result = {};
