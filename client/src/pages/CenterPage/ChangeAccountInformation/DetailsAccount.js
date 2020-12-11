@@ -8,17 +8,20 @@ import {
   NotificationContainer,
   NotificationManager,
 } from "react-notifications";
+import { SliderPicker } from "react-color";
 const axios = require("axios");
 function DetailsAccount() {
   const [email, setEmail] = useState();
   const [name, setName] = useState();
+  const [color, setColor] = useState();
   const [edit, setEdit] = useState(true);
   const handleSubmit = () => {
     axios
-      .post("/edit-account-details", {
+      .post("/edit-center-details", {
         account_username: sessionStorage.getItem("account_username"),
         account_name: name,
         account_email: email,
+        account_color: color,
       })
       .then((res) => {
         if (res.data.message) {
@@ -40,9 +43,9 @@ function DetailsAccount() {
       })
       .then((res) => {
         if (res.data.length > 0) {
-          console.log(res.data);
           setEmail(res.data[0].account_email);
           setName(res.data[0].account_name);
+          setColor(res.data[0].account_color);
         }
       })
       .catch((error) => {
@@ -84,6 +87,13 @@ function DetailsAccount() {
                         *
                       </div>
                     </div>
+                    <br />
+                    <div className="d-flex mt-2">
+                      Color
+                      <div className="ml-1" style={{ color: "red" }}>
+                        *
+                      </div>
+                    </div>
                   </div>
                   <div className="col-10">
                     {edit ? (
@@ -99,6 +109,14 @@ function DetailsAccount() {
                           style={{ width: "100%" }}
                           value={email}
                         />
+                        <br />
+                        <div
+                          style={{
+                            width: "100px",
+                            height: "20px",
+                            backgroundColor: color,
+                          }}
+                        ></div>
                       </div>
                     ) : (
                       <div>
@@ -116,6 +134,11 @@ function DetailsAccount() {
                           value={email}
                           validators={["required"]}
                           errorMessages={["This field is required"]}
+                        />
+                        <br />
+                        <SliderPicker
+                          color={color}
+                          onChangeComplete={(color) => setColor(color.hex)}
                         />
                         <br />
                         <h5 className="mb-3" style={{ color: "red" }}>

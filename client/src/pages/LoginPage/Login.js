@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import Footer from "./../../components/Footer";
 import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn } from "mdbreact";
+import LockIcon from "@material-ui/icons/Lock";
 const axios = require("axios");
 const Login = () => {
   const [isFail, setIsFail] = useState(false);
@@ -46,6 +47,9 @@ const Login = () => {
       .catch((error) => {
         console.log(error);
       });
+  };
+  const onForgot = () => {
+    history.push("/forgot-password");
   };
   return (
     <div style={{ backgroundColor: "#fbe2e5", height: "100%" }}>
@@ -109,11 +113,37 @@ const Login = () => {
                   </MDBRow>
                 </MDBContainer>
                 {isFail ? (
-                  <p className="mt-2 d-flex justify-content-center">
+                  <p
+                    className="mt-3 d-flex justify-content-center"
+                    style={{ color: "red" }}
+                  >
                     {" "}
-                    Wrong Username / password{" "}
+                    Wrong Username / Password{" "}
                   </p>
                 ) : null}
+                <div className="d-flex justify-content-center">
+                  <button
+                    style={{
+                      marginTop: "20px",
+                      marginBottom: "10px",
+                      padding: 0,
+                      border: "none",
+                      background: "none",
+                    }}
+                    className="d-flex"
+                    onClick={() => onForgot()}
+                  >
+                    <LockIcon />
+                    <div
+                      style={{
+                        marginTop: "0px",
+                        marginLeft: "5px",
+                      }}
+                    >
+                      Forgot your password ?
+                    </div>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
