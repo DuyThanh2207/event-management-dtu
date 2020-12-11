@@ -9,7 +9,7 @@ import {
   NotificationContainer,
   NotificationManager,
 } from "react-notifications";
-
+//[Server/Backend] edit account
 const axios = require("axios");
 const ChangeAccountInformation = () => {
   const [oldPassword, setOldPassword] = useState();
