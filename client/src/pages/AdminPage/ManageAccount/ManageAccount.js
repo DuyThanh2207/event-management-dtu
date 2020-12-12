@@ -247,6 +247,7 @@ const ManageAccount = () => {
   var centerAccount = dataUser.filter(
     (item) => item.account_role === "DTU Event Center"
   );
+//[frontend] create account
   return (
     <div className="app">
       <Navbar />
