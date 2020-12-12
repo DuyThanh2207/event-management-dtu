@@ -96,7 +96,7 @@ const ManageAccount = () => {
         />
       );
   };
-// [Server/Backend] 
+// [Server/Backend] Block Account
   const blockUser = (rowData) => {
     if (rowData.account_role === "DTU Event Center") {
       setSelectedCenter(rowData.account_username);
@@ -182,6 +182,7 @@ const ManageAccount = () => {
         console.log(error);
       });
   };
+//[Server/Backend]  Edit status
   const changeCreateStatus = () => {
     setEditStatus(false);
     setCreateStatus(true);
