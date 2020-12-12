@@ -96,6 +96,7 @@ const ManageAccount = () => {
         />
       );
   };
+
   const blockUser = (rowData) => {
     if (rowData.account_role === "DTU Event Center") {
       setSelectedCenter(rowData.account_username);
