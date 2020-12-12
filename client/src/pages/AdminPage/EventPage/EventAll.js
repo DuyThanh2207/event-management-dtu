@@ -30,6 +30,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import AddEvent from "./../../../components/AdminPage/Event/AddEvent";
 import EditEvent from "./../../../components/AdminPage/Event/EditEvent";
+
 const axios = require("axios");
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 0,
   },
 }));
+//[Server/Backend]  Show Event information 
 const EventAll = () => {
   const classes = useStyles();
   const [eventData, setEventData] = useState([]);
@@ -155,10 +157,12 @@ const EventAll = () => {
         console.log(error);
       });
   };
+  //[Server/Backend] Create an calendar for Event includes
   const addNewEvent = () => {
     if (addEvent)
       return <AddEvent getAddNewEvent={(data) => getAddNewEvent(data)} />;
   };
+  // [Server/Backend] Show Event detail 
   const getAddNewEvent = (data) => {
     axios
       .post("/add-event", {
@@ -180,6 +184,7 @@ const EventAll = () => {
         }
       });
   };
+  //[Server/Backend] edit Event
   var eventEdit = eventData.filter((item) => new Date(item.time) >= new Date());
   const editEventForm = () => {
     var result = {};
@@ -228,6 +233,7 @@ const EventAll = () => {
     setEditEvent(true);
     setAddEvent(false);
   };
+ // [Frontend] UI for Event detail
   return (
     <div className="app">
       <Navbar />

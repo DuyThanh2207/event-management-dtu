@@ -4,6 +4,7 @@ import Footer from "./../../components/Footer";
 import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn } from "mdbreact";
 import LockIcon from "@material-ui/icons/Lock";
 const axios = require("axios");
+//[Server/Backend] Login for admin, Event organizer, Event center.
 const Login = () => {
   const [isFail, setIsFail] = useState(false);
   const [userName, setUserName] = useState();
