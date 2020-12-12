@@ -5,6 +5,7 @@ import Footer from "../../../components/Footer";
 import MaterialTable from "material-table";
 import "react-notifications/lib/notifications.css";
 const axios = require("axios");
+// [Server/Backend] Show Event information
 const Show = () => {
   const [showData, setShowData] = useState([]);
   const [columns, setColumns] = useState([
@@ -26,6 +27,7 @@ const Show = () => {
         console.log(error);
       });
   }, []);
+  // [Frondend] show event information
   return (
     <>
       <div className="app">
