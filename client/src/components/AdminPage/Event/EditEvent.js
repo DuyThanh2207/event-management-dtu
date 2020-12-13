@@ -47,6 +47,19 @@ function EditEvent(props) {
     let data = { ...newData, time: datetime };
     props.getEditEvent(data);
   };
+  const getEditCenter = (newData) => {
+    let datetime = new Date(newData.time);
+    let dd = String(datetime.getDate()).padStart(2, "0");
+    let mm = String(datetime.getMonth() + 1).padStart(2, "0");
+    let yyyy = datetime.getFullYear();
+    let hour = String(datetime.getHours()).padStart(2, "0");
+    let minute = String(datetime.getMinutes()).padStart(2, "0");
+    let second = String(datetime.getSeconds()).padStart(2, "0");
+    datetime =
+      yyyy + "-" + mm + "-" + dd + " " + hour + ":" + minute + ":" + second;
+    let data = { ...newData, time: datetime };
+    props.getEditCenter(data);
+  };
   return (
     <>
       <MaterialTable
@@ -58,10 +71,13 @@ function EditEvent(props) {
           filtering: true,
         }}
         editable={{
-          onRowUpdate: (newData) =>
+          onRowUpdate: (newData, oldData) =>
             new Promise((resolve) => {
               setTimeout(() => {
-                getEditEvent(newData);
+                if (oldData.center_username === newData.center_username)
+                  getEditEvent(newData);
+                else if (oldData.center_username !== newData.center_username)
+                  getEditCenter(newData);
                 resolve();
               }, 1000);
             }),

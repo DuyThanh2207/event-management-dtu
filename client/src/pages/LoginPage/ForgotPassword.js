@@ -8,7 +8,6 @@ const ForgotPassword = () => {
   const [isSuccess, setIsSuccess] = useState(true);
   const [email, setEmail] = useState();
   const [show, setShow] = useState(false);
-  const [sendEmail, setSendEmail] = useState(false);
   let history = useHistory();
   const onClickHandler = (e) => {
     e.preventDefault();
