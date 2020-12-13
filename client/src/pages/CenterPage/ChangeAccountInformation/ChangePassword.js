@@ -44,6 +44,7 @@ const ChangePassword = () => {
         });
     }
   };
+  //[frontend] change password
   return (
     <div className="app">
       <Navbar />
