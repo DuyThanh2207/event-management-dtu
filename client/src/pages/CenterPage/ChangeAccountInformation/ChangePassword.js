@@ -14,7 +14,7 @@ const axios = require("axios");
 const ChangePassword = () => {
   const [oldPassword, setOldPassword] = useState();
   const [newPassword, setNewPassword] = useState();
-  let history = useHistory();
+     history = useHistory();
   const getEditAccount = () => {
     if (oldPassword === newPassword) {
       NotificationManager.error(
