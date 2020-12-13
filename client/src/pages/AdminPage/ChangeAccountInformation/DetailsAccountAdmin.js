@@ -52,6 +52,7 @@ function DetailsAccountAdmin() {
   useEffect(() => {
     fetchAccountData();
   }, []);
+  //[Frontend] account detail information
   return (
     <div className="app">
       <Navbar />

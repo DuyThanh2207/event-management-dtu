@@ -22,6 +22,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+//[Server/Backend] Show Information account
 const axios = require("axios");
 const ManageAccount = () => {
   const [open, setOpen] = useState(false);
@@ -80,10 +81,12 @@ const ManageAccount = () => {
   useEffect(() => {
     fetchData();
   }, []);
+  //[Server/Backend] Create new a Account
   const showCreate = () => {
     if (createStatus === true)
       return <CreateAccountForm getAddData={(data) => getAddData(data)} />;
   };
+ // [Server/Backend] Edit Account
   const showEdit = () => {
     if (editStatus === true)
       return (
@@ -93,6 +96,7 @@ const ManageAccount = () => {
         />
       );
   };
+// [Server/Backend] Block Account
   const blockUser = (rowData) => {
     if (rowData.account_role === "DTU Event Center") {
       setSelectedCenter(rowData.account_username);
@@ -178,6 +182,7 @@ const ManageAccount = () => {
         console.log(error);
       });
   };
+//[Server/Backend]  Edit status
   const changeCreateStatus = () => {
     setEditStatus(false);
     setCreateStatus(true);
@@ -189,6 +194,7 @@ const ManageAccount = () => {
     setEditStatus(true);
     setShow(true);
   };
+  //[Server/Backend] Delete Account
   const deleteUser = (userID) => {
     if (
       userID.toLowerCase() ===
@@ -213,6 +219,7 @@ const ManageAccount = () => {
         });
     }
   };
+  //[Server/Backend] Edit Account
   const getEditUser = (user) => {
     axios
       .post("/edit-user", {
@@ -240,6 +247,7 @@ const ManageAccount = () => {
   var centerAccount = dataUser.filter(
     (item) => item.account_role === "DTU Event Center"
   );
+//[frontend] create account
   return (
     <div className="app">
       <Navbar />

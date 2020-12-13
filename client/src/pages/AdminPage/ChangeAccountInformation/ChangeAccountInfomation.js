@@ -9,6 +9,7 @@ import {
   NotificationContainer,
   NotificationManager,
 } from "react-notifications";
+//[Server/Backend] edit account
 const axios = require("axios");
 const ChangeAccountInformation = () => {
   const [oldPassword, setOldPassword] = useState();
@@ -43,6 +44,7 @@ const ChangeAccountInformation = () => {
         });
     }
   };
+  //[Frontend] UI for Change Password 
   return (
     <div className="app">
       <Navbar />

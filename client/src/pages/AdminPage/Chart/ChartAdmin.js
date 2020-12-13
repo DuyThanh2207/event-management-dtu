@@ -119,6 +119,7 @@ function Chart() {
         console.log(error);
       });
   }, []);
+  //[frontend] chart finance
   return (
     <div className="app">
       <Navbar />

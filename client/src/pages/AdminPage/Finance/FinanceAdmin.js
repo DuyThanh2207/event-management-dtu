@@ -4,6 +4,7 @@ import Navbar from "../../../components/AdminPage/Navbar";
 import Footer from "../../../components/Footer";
 import MaterialTable from "material-table";
 import "react-notifications/lib/notifications.css";
+//[Frontend] Show Event detail page for  Event center 
 const axios = require("axios");
 const FinanceAdmin = () => {
   const [financeData, setFinanceData] = useState([]);
