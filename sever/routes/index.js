@@ -86,6 +86,38 @@ router.post("/edit-event-admin", (req, res) => {
         }
     );
 });
+router.post("/edit-event-admin-center", (req, res) => {
+    const event_id = req.body.event_id;
+    const event_name = req.body.event_name;
+    const event_place = req.body.event_place;
+    const event_date = req.body.event_date;
+    const event_duration = req.body.event_duration;
+    const event_description = req.body.event_description;
+    const center_username = req.body.center_username;
+    connection.query(
+        "UPDATE emd_event SET event_name = ?, event_place = ?, event_date = ?, event_duration = ?, event_description = ?, center_username = ? WHERE event_id = ?", [
+            event_name,
+            event_place,
+            event_date,
+            event_duration,
+            event_description,
+            center_username,
+            event_id,
+        ],
+        (err, response) => {
+            if (err) res.send({ message: err });
+            else {
+                connection.query(
+                    "DELETE FROM task WHERE event_id = ?", [event_id],
+                    (err, response) => {
+                        if (err) res.send({ message: err });
+                        else res.send(response);
+                    }
+                );
+            }
+        }
+    );
+});
 router.get("/account-center-admin", (req, res) => {
     connection.query(
         "SELECT DISTINCT a.account_username, a.account_name, a.account_color FROM account a, emd_event b WHERE a.account_username = b.center_username",

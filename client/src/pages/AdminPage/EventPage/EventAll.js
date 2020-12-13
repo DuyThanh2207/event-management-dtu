@@ -197,12 +197,33 @@ const EventAll = () => {
           eventEdit={eventEdit}
           result={result}
           getEditEvent={(data) => getEditEvent(data)}
+          getEditCenter={(data) => getEditCenter(data)}
         />
       );
   };
   const getEditEvent = (data) => {
     axios
       .post("/edit-event-admin", {
+        event_id: data.event_id,
+        event_name: data.event_name,
+        event_place: data.event_place,
+        event_date: data.time,
+        event_duration: data.event_duration,
+        event_description: data.event_description,
+        center_username: data.center_username,
+      })
+      .then((res) => {
+        if (res.data.message) {
+          NotificationManager.error(res.data.message, "Error", 3000);
+        } else {
+          NotificationManager.success("Complete !", "Success", 3000);
+          fetchEvent();
+        }
+      });
+  };
+  const getEditCenter = (data) => {
+    axios
+      .post("/edit-event-admin-center", {
         event_id: data.event_id,
         event_name: data.event_name,
         event_place: data.event_place,
