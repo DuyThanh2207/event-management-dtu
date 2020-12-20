@@ -53,11 +53,18 @@ const ReportCenter = () => {
   ]);
   const fetchData = async () => {
     let data = await axios
-      .post("/report-list", {
-        center_username: sessionStorage.getItem("account_username"),
-      })
-      .then((res) => {
-        if (res.data.length > 0) setReportData(res.data);
+      .get("/check-report")
+      .then(() => {
+        axios
+          .post("/report-list", {
+            center_username: sessionStorage.getItem("account_username"),
+          })
+          .then((res) => {
+            if (res.data.length > 0) setReportData(res.data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       })
       .catch((error) => {
         console.log(error);

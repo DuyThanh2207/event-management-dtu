@@ -12,7 +12,7 @@ const CreateAccountForm = (props) => {
   const [color, setColor] = useState("#000000");
   const getCreateAccount = () => {
     let colorTemp = color;
-    if (role !== "DTU Event Center") colorTemp = "";
+    if (role !== "DTU Event Center" && role !== "Sub Center") colorTemp = "";
     let data = {
       account_username: username,
       account_password: password,
@@ -88,9 +88,12 @@ const CreateAccountForm = (props) => {
           <MenuItem key="Admin" value="Admin">
             Admin
           </MenuItem>
+          <MenuItem key="Sub Center" value="Sub Center">
+            Sub Center
+          </MenuItem>
         </TextValidator>
         <br />
-        {role === "DTU Event Center" && (
+        {(role === "DTU Event Center" && (
           <div>
             <div className="mb-1">Please select account's color</div>
             <SliderPicker
@@ -99,7 +102,17 @@ const CreateAccountForm = (props) => {
             />
             <br />
           </div>
-        )}
+        )) ||
+          (role === "Sub Center" && (
+            <div>
+              <div className="mb-1">Please select account's color</div>
+              <SliderPicker
+                color={color}
+                onChangeComplete={(color) => setColor(color.hex)}
+              />
+              <br />
+            </div>
+          ))}
         <h5 className="mb-3" style={{ color: "red" }}>
           * is require
         </h5>

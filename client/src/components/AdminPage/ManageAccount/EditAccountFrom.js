@@ -26,11 +26,18 @@ const EditAccountForm = (props) => {
   const selectRole = () => {
     if (props.editUser.account_role === "Blocked")
       if (props.editUser.account_color !== "")
-        return (
-          <MenuItem key="DTU Event Center" value="DTU Event Center">
-            DTU Event Center
-          </MenuItem>
-        );
+        if (props.editUser.is_admin === "false")
+          return (
+            <MenuItem key="Sub Center" value="Sub Center">
+              Sub Center
+            </MenuItem>
+          );
+        else
+          return (
+            <MenuItem key="DTU Event Center" value="DTU Event Center">
+              DTU Event Center
+            </MenuItem>
+          );
       else if (props.editUser.is_admin === "true")
         return (
           <MenuItem key="Admin" value="Admin">
@@ -113,10 +120,15 @@ const EditAccountForm = (props) => {
               Admin
             </MenuItem>
           )}
+          {props.editUser.account_role === "Sub Center" && (
+            <MenuItem key="Sub Center" value="Sub Center">
+              Admin
+            </MenuItem>
+          )}
           {selectRole()}
         </TextValidator>
         <br />
-        {role === "DTU Event Center" && (
+        {(role === "DTU Event Center" && (
           <div>
             <div className="mb-1">Please select account's color</div>
             <br />
@@ -126,7 +138,18 @@ const EditAccountForm = (props) => {
             />
             <br />
           </div>
-        )}
+        )) ||
+          (role === "Sub Center" && (
+            <div>
+              <div className="mb-1">Please select account's color</div>
+              <br />
+              <SliderPicker
+                color={color}
+                onChangeComplete={(color) => setColor(color.hex)}
+              />
+              <br />
+            </div>
+          ))}
         <h5 className="mb-3" style={{ color: "red" }}>
           * is require
         </h5>

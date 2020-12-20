@@ -127,11 +127,15 @@ router.get("/account-center-admin", (req, res) => {
         }
     );
 });
-router.get("/account", (req, res) => {
-    connection.query("SELECT DISTINCT * FROM account", (err, response) => {
-        if (err) res.send({ message: "Can't show data" });
-        else res.send(response);
-    });
+router.post("/account", (req, res) => {
+    const account_username = req.body.account_username;
+    connection.query(
+        "SELECT DISTINCT * FROM account WHERE account_username <> ?", [account_username],
+        (err, response) => {
+            if (err) res.send({ message: "Can't show data" });
+            else res.send(response);
+        }
+    );
 });
 router.post("/create-user", (req, res) => {
     const account_name = req.body.account_name;
@@ -149,12 +153,25 @@ router.post("/create-user", (req, res) => {
             else {
                 if (account_role === "Admin") {
                     connection.query(
-                        "INSERT INTO account (account_name, account_username, account_password, account_email, account_role, account_color, is_admin) VALUES (?, ?, ?, ?, ?, ?, 'true')", [
+                        "INSERT INTO account (account_name, account_username, account_password, account_email, account_role, account_color, is_admin) VALUES (?, ?, ?, ?, 'Admin', ?, 'true')", [
                             account_name,
                             account_username,
                             account_password,
                             account_email,
-                            account_role,
+                            account_color,
+                        ],
+                        (err, response) => {
+                            if (err) res.send({ message: "Can't create account" });
+                            else res.send(response);
+                        }
+                    );
+                } else if (account_role === "Sub Center") {
+                    connection.query(
+                        "INSERT INTO account (account_name, account_username, account_password, account_email, account_role, account_color, is_admin) VALUES (?, ?, ?, ?, 'Sub Center', ?, 'false')", [
+                            account_name,
+                            account_username,
+                            account_password,
+                            account_email,
                             account_color,
                         ],
                         (err, response) => {
@@ -244,13 +261,13 @@ router.post("/block-user", (req, res) => {
     connection.query(
         "UPDATE account SET account_role = 'Blocked' WHERE account_username = ?", [account_username],
         (err, response) => {
-            if (err) res.send({ message: "Can't delete account" });
+            if (err) res.send({ message: "Can't block account" });
             else {
                 if (account_role === "DTU Event Center") {
                     connection.query(
                         "SELECT event_id FROM emd_event WHERE DATE_FORMAT(event_date, '%Y-%m-%d') > ? AND center_username = ?", [today, account_username],
                         (err, response) => {
-                            if (err) res.send({ message: "Can't delete account" });
+                            if (err) res.send({ message: "Can't block account" });
                             else {
                                 let temp = [];
                                 response.forEach((item) => temp.push(item.event_id));
@@ -262,8 +279,16 @@ router.post("/block-user", (req, res) => {
                                 connection.query(
                                     "UPDATE emd_event SET center_username = ? WHERE DATE_FORMAT(event_date, '%Y-%m-%d') > ? AND center_username = ?", [account_username_another, today, account_username],
                                     (err, response) => {
-                                        if (err) res.send({ message: "Can't delete account" });
-                                        else res.send(response);
+                                        if (err) res.send({ message: "Can't block account" });
+                                        else {
+                                            connection.query(
+                                                "DELETE FROM assignment WHERE center_id = ?", [account_username],
+                                                (err, response) => {
+                                                    if (err) res.send({ message: "Can't block account" });
+                                                    else res.send(response);
+                                                }
+                                            );
+                                        }
                                     }
                                 );
                             }
@@ -386,22 +411,31 @@ router.post("/update-password", (req, res) => {
     );
 });
 //Role Center
-router.post("/report-center", (req, res) => {
-    const center_username = req.body.center_username;
-    connection.query(
-        "SELECT a.id, a.report_detail, a.report_time, b.event_name, c.task_name, b.center_username, a.annunciator, a.report_handle FROM report a, emd_event b, task c WHERE a.event_id = b.event_id AND a.task_id = c.task_id AND b.center_username = ? AND a.report_handle IS NULL", [center_username],
-        (err, response) => {
-            if (err) res.send({ message: "Can't show data" });
-            else res.send(response);
-        }
-    );
-});
+// router.post("/report-center", (req, res) => {
+//     const center_username = req.body.center_username;
+//     connection.query(
+//         "SELECT a.id, a.report_detail, a.report_time, b.event_name, c.task_name, b.center_username, a.annunciator, a.report_handle FROM report a, emd_event b, task c WHERE a.event_id = b.event_id AND a.task_id = c.task_id AND b.center_username = ? AND a.report_handle IS NULL", [center_username],
+//         (err, response) => {
+//             if (err) res.send({ message: "Can't show data" });
+//             else res.send(response);
+//         }
+//     );
+// });
 router.post("/report-list", (req, res) => {
     const center_username = req.body.center_username;
     connection.query(
         "SELECT a.id, a.report_detail, a.report_time, b.event_name, c.task_name, b.center_username, a.annunciator, a.report_handle FROM report a, emd_event b, task c WHERE a.event_id = b.event_id AND a.task_id = c.task_id AND b.center_username = ?", [center_username],
         (err, response) => {
             if (err) res.send({ message: "Can't show data" });
+            else res.send(response);
+        }
+    );
+});
+router.get("/check-report", (req, res) => {
+    connection.query(
+        "UPDATE report SET report_handle = 'Unsolved' where DATE_FORMAT(report_time, '%Y-%m-%d') < ? and report_handle IS NULL", [today],
+        (err, response) => {
+            if (err) res.send({ message: err });
             else res.send(response);
         }
     );
@@ -809,7 +843,7 @@ router.post("/event-staff", (req, res) => {
 
 router.get("/account-center", (req, res) => {
     connection.query(
-        'SELECT distinct * FROM account where account_role = "DTU Event Center"',
+        'SELECT distinct * FROM account where account_role = "DTU Event Center" OR account_role = "Sub Center"',
         (err, response) => {
             if (err) res.send({ message: "Can't show data" });
             else res.send(response);

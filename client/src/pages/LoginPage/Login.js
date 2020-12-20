@@ -35,7 +35,8 @@ const Login = () => {
           ) {
             history.push("/event");
           } else if (
-            sessionStorage.getItem("account_role") === "DTU Event Staff"
+            sessionStorage.getItem("account_role") === "DTU Event Staff" ||
+            sessionStorage.getItem("account_role") === "Sub Center"
           ) {
             history.push("/event");
           } else if (sessionStorage.getItem("account_role") === "Blocked") {
