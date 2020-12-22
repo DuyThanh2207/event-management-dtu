@@ -458,7 +458,7 @@ router.get("/check-report", (req, res) => {
     connection.query(
         "UPDATE report SET report_handle = 'Unsolved' where DATE_FORMAT(report_time, '%Y-%m-%d') < ? and report_handle IS NULL", [today],
         (err, response) => {
-            if (err) res.send({ message: err });
+            if (err) res.send({ message: "Can't check report" });
             else res.send(response);
         }
     );
@@ -510,7 +510,7 @@ router.post("/delete-member", (req, res) => {
     connection.query(
         "SELECT DISTINCT * FROM task a, emd_event b WHERE staff_id LIKE ? and a.event_id = b.event_id and DATE_FORMAT(b.event_date, '%Y-%m-%d') >= ?", [staff_id, today],
         (err, response) => {
-            if (err) res.send({ message: err });
+            if (err) res.send({ message: "Can't show data" });
             else if (response.length > 0)
                 res.send({ message: "You must remove staff's task before delete" });
             else {
@@ -564,7 +564,7 @@ router.post("/add-task", (req, res) => {
             start_date,
         ],
         (err, response) => {
-            if (err) res.send({ message: err });
+            if (err) res.send({ message: "Can't add task ! Please try again !" });
             else res.send(response);
         }
     );
@@ -588,7 +588,7 @@ router.post("/edit-task", (req, res) => {
             task_id,
         ],
         (err, response) => {
-            if (err) res.send({ message: err });
+            if (err) res.send({ message: "Can't update task ! Please try again !" });
             else res.send(response);
         }
     );
@@ -598,12 +598,13 @@ router.post("/delete-task", (req, res) => {
     connection.query(
         "DELETE FROM report WHERE (task_id = ?)", [task_id],
         (err, response) => {
-            if (err) res.send({ message: err });
+            if (err) res.send({ message: "Can't delete task ! Please try again !" });
             else {
                 connection.query(
                     "DELETE FROM task WHERE (task_id = ?)", [task_id],
                     (err, response) => {
-                        if (err) res.send({ message: err });
+                        if (err)
+                            res.send({ message: "Can't delete task ! Please try again !" });
                         else res.send(response);
                     }
                 );
@@ -615,7 +616,7 @@ router.get("/check-task", (req, res) => {
     connection.query(
         "UPDATE task SET status = 'Fail' where DATE_FORMAT(deadline, '%Y-%m-%d') < ? and status = 'In Process'", [today],
         (err, response) => {
-            if (err) res.send({ message: err });
+            if (err) res.send({ message: "Can't check task ! Please try again !" });
             else res.send(response);
         }
     );
@@ -659,7 +660,7 @@ router.post("/edit-event", (req, res) => {
             event_id,
         ],
         (err, response) => {
-            if (err) res.send({ message: err });
+            if (err) res.send({ message: "Can't update event ! Please try again !" });
             else res.send(response);
         }
     );
@@ -673,19 +674,20 @@ router.post("/delete-event", (req, res) => {
     connection.query(
         "DELETE FROM report WHERE (event_id = ?)", [event_id],
         (err, response) => {
-            if (err) res.send({ message: err });
+            if (err) res.send({ message: "Can't delete event ! Please try again !" });
             else if (response) {
                 connection.query(
                     "DELETE FROM finance WHERE (event_id = ?)", [event_id1],
                     (err, response) => {
-                        if (err) res.send({ message: err });
+                        if (err)
+                            res.send({ message: "Can't delete event ! Please try again !" });
                         else if (response) {
                             connection.query(
                                 "DELETE FROM event_show WHERE (event_id = ?)", [event_id2],
                                 (err) => {
                                     if (err)
                                         res.send({
-                                            message: err,
+                                            message: "Can't delete event ! Please try again !",
                                         });
                                     else if (response) {
                                         connection.query(
@@ -693,7 +695,7 @@ router.post("/delete-event", (req, res) => {
                                             (err, response) => {
                                                 if (err)
                                                     res.send({
-                                                        message: err,
+                                                        message: "Can't delete event ! Please try again !",
                                                     });
                                                 else if (response) {
                                                     connection.query(
@@ -701,7 +703,7 @@ router.post("/delete-event", (req, res) => {
                                                         (err, response) => {
                                                             if (err)
                                                                 res.send({
-                                                                    message: err,
+                                                                    message: "Can't delete event ! Please try again !",
                                                                 });
                                                             else res.send(response);
                                                         }
@@ -750,7 +752,8 @@ router.post("/add-show", (req, res) => {
             show_description,
         ],
         (err, response) => {
-            if (err) res.send({ message: err });
+            if (err)
+                res.send({ message: "Can't add this show ! Please try again !" });
             else res.send(response);
         }
     );
@@ -772,7 +775,8 @@ router.post("/edit-show", (req, res) => {
             id,
         ],
         (err, response) => {
-            if (err) res.send({ message: err });
+            if (err)
+                res.send({ message: "Can't update this show ! Please try again !" });
             else res.send(response);
         }
     );
@@ -782,7 +786,8 @@ router.post("/delete-show", (req, res) => {
     connection.query(
         "DELETE FROM event_show WHERE (id = ?)", [id],
         (err, response) => {
-            if (err) res.send({ message: err });
+            if (err)
+                res.send({ message: "Can't delete this show ! Please try again !" });
             else res.send(response);
         }
     );
@@ -812,7 +817,8 @@ router.post("/add-finance", (req, res) => {
             finance_spending,
         ],
         (err, response) => {
-            if (err) res.send({ message: err });
+            if (err)
+                res.send({ message: "Can't add this finance ! Please try again !" });
             else res.send(response);
         }
     );
@@ -826,7 +832,8 @@ router.post("/edit-finance", (req, res) => {
     connection.query(
         "UPDATE finance SET finance_name = ?, finance_description = ?, finance_time = ?, finance_spending = ? WHERE id = ?", [finance_name, finance_description, finance_time, finance_spending, id],
         (err, response) => {
-            if (err) res.send({ message: err });
+            if (err)
+                res.send({ message: "Can't update this finance ! Please try again !" });
             else res.send(response);
         }
     );
@@ -836,7 +843,8 @@ router.post("/delete-finance", (req, res) => {
     connection.query(
         "DELETE FROM finance WHERE (id = ?)", [id],
         (err, response) => {
-            if (err) res.send({ message: err });
+            if (err)
+                res.send({ message: "Can't delete this finance ! Please try again !" });
             else res.send(response);
         }
     );
@@ -866,7 +874,8 @@ router.post("/update-report", (req, res) => {
     connection.query(
         'UPDATE report SET report_handle = "Solved" WHERE id = ?', [id],
         (err, response) => {
-            if (err) res.send({ message: err });
+            if (err)
+                res.send({ message: "Can't update this report ! Please try again !" });
             else res.send(response);
         }
     );
@@ -877,13 +886,14 @@ router.post("/event-staff", (req, res) => {
     connection.query(
         "SELECT * FROM assignment WHERE staff_id LIKE ?", [staff_id],
         (err, response) => {
-            if (err) res.send({ message: err });
+            if (err) res.send({ message: "Can't show data ! Please try again !" });
             else if (response.length === 0) res.send([]);
             else {
                 connection.query(
                     "SELECT distinct b.event_id, b.event_name, b.event_place, b.event_date, b.event_duration, b.event_description, DATE_FORMAT(b.event_date, '%d-%m-%Y') as event_date, DATE_FORMAT(b.event_date, '%H:%i:%s') as event_time, b.event_date as time FROM task a, emd_event b WHERE a.event_id = b.event_id and a.staff_id LIKE ?", [staff_id],
                     (err, response) => {
-                        if (err) res.send({ message: err });
+                        if (err)
+                            res.send({ message: "Can't show data ! Please try again !" });
                         else res.send(response);
                     }
                 );
@@ -907,7 +917,7 @@ router.post("/task-staff-all", (req, res) => {
     connection.query(
         "SELECT distinct * from task where staff_id like ? and event_id = ?", [staff_id, event_id],
         (err, response) => {
-            if (err) res.send({ message: err });
+            if (err) res.send({ message: "Can't show data ! Please try again !" });
             else res.send(response);
         }
     );
@@ -918,7 +928,7 @@ router.post("/task-staff-done", (req, res) => {
     connection.query(
         'SELECT distinct * from task where staff_id like ? and status = "Done" and event_id = ?', [staff_id, event_id],
         (err, response) => {
-            if (err) res.send({ message: err });
+            if (err) res.send({ message: "Can't show data ! Please try again !" });
             else res.send(response);
         }
     );
@@ -928,12 +938,13 @@ router.post("/task-staff-inprocess", (req, res) => {
     connection.query(
         "SELECT DISTINCT * FROM assignment WHERE staff_id LIKE ?", [staff_id],
         (err, response) => {
-            if (err) res.send({ message: err });
+            if (err) res.send({ message: "Can't show data ! Please try again !" });
             else if (response.length !== 0) {
                 connection.query(
                     'SELECT distinct * from task where staff_id like ? and status = "In Process"', [staff_id],
                     (err, response) => {
-                        if (err) res.send({ message: err });
+                        if (err)
+                            res.send({ message: "Can't show data ! Please try again !" });
                         else res.send(response);
                     }
                 );
@@ -947,7 +958,7 @@ router.post("/task-staff-fail", (req, res) => {
     connection.query(
         'SELECT distinct * from task where staff_id like ? and status = "Fail" and event_id = ?', [staff_id, event_id],
         (err, response) => {
-            if (err) res.send({ message: err });
+            if (err) res.send({ message: "Can't show data ! Please try again !" });
             else res.send(response);
         }
     );
@@ -982,7 +993,8 @@ router.post("/report", (req, res) => {
     connection.query(
         "INSERT INTO report (event_id, task_id, report_detail, report_time, annunciator) VALUES (?, ?, ?, ?, ?)", [event_id, task_id, report_detail, report_time, annunciator],
         (err, response) => {
-            if (err) res.send({ message: err });
+            if (err)
+                res.send({ message: "Can't submit this report ! Please try again !" });
             else res.send(response);
         }
     );
