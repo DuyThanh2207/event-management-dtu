@@ -81,7 +81,7 @@ router.post("/edit-event-admin", (req, res) => {
             event_id,
         ],
         (err, response) => {
-            if (err) res.send({ message: err });
+            if (err) res.send({ message: "Can't update event ! Please try again" });
             else res.send(response);
         }
     );
@@ -105,13 +105,25 @@ router.post("/edit-event-admin-center", (req, res) => {
             event_id,
         ],
         (err, response) => {
-            if (err) res.send({ message: err });
+            if (err) res.send({ message: "Can't update event ! Please try again" });
             else {
                 connection.query(
-                    "DELETE FROM task WHERE event_id = ?", [event_id],
+                    "DELETE FROM report WHERE event_id = ?", [event_id],
                     (err, response) => {
-                        if (err) res.send({ message: err });
-                        else res.send(response);
+                        if (err)
+                            res.send({ message: "Can't update event ! Please try again" });
+                        else {
+                            connection.query(
+                                "DELETE FROM task WHERE event_id = ?", [event_id],
+                                (err, response) => {
+                                    if (err)
+                                        res.send({
+                                            message: "Can't update event ! Please try again",
+                                        });
+                                    else res.send(response);
+                                }
+                            );
+                        }
                     }
                 );
             }
@@ -254,6 +266,15 @@ router.post("/test", (req, res) => {
         }
     );
 });
+router.get("/testapi", (req, res) => {
+    connection.query("SELECT * FROM account", (err, response) => {
+        if (err) res.send({ message: "Can't delete account" });
+        else {
+            let temp = response.map((item) => item.account_username);
+            res.send(temp);
+        }
+    });
+});
 router.post("/block-user", (req, res) => {
     const account_username = req.body.account_username;
     const account_role = req.body.account_role;
@@ -269,9 +290,11 @@ router.post("/block-user", (req, res) => {
                         (err, response) => {
                             if (err) res.send({ message: "Can't block account" });
                             else {
-                                let temp = [];
-                                response.forEach((item) => temp.push(item.event_id));
+                                let temp = response.map((item) => item.event_id);
                                 temp.forEach((item) => {
+                                    connection.query("DELETE FROM report WHERE event_id = ?", [
+                                        item,
+                                    ]);
                                     connection.query("DELETE FROM task WHERE event_id = ?", [
                                         item,
                                     ]);
@@ -411,16 +434,16 @@ router.post("/update-password", (req, res) => {
     );
 });
 //Role Center
-// router.post("/report-center", (req, res) => {
-//     const center_username = req.body.center_username;
-//     connection.query(
-//         "SELECT a.id, a.report_detail, a.report_time, b.event_name, c.task_name, b.center_username, a.annunciator, a.report_handle FROM report a, emd_event b, task c WHERE a.event_id = b.event_id AND a.task_id = c.task_id AND b.center_username = ? AND a.report_handle IS NULL", [center_username],
-//         (err, response) => {
-//             if (err) res.send({ message: "Can't show data" });
-//             else res.send(response);
-//         }
-//     );
-// });
+router.post("/report-center", (req, res) => {
+    const center_username = req.body.center_username;
+    connection.query(
+        "SELECT a.id, a.report_detail, a.report_time, b.event_name, c.task_name, b.center_username, a.annunciator, a.report_handle FROM report a, emd_event b, task c WHERE a.event_id = b.event_id AND a.task_id = c.task_id AND b.center_username = ? AND a.report_handle IS NULL", [center_username],
+        (err, response) => {
+            if (err) res.send({ message: "Can't show data" });
+            else res.send(response);
+        }
+    );
+});
 router.post("/report-list", (req, res) => {
     const center_username = req.body.center_username;
     connection.query(
@@ -573,10 +596,18 @@ router.post("/edit-task", (req, res) => {
 router.post("/delete-task", (req, res) => {
     const task_id = req.body.task_id;
     connection.query(
-        "DELETE FROM task WHERE (task_id = ?)", [task_id],
+        "DELETE FROM report WHERE (task_id = ?)", [task_id],
         (err, response) => {
             if (err) res.send({ message: err });
-            else res.send(response);
+            else {
+                connection.query(
+                    "DELETE FROM task WHERE (task_id = ?)", [task_id],
+                    (err, response) => {
+                        if (err) res.send({ message: err });
+                        else res.send(response);
+                    }
+                );
+            }
         }
     );
 });
@@ -638,33 +669,44 @@ router.post("/delete-event", (req, res) => {
     const event_id1 = req.body.event_id;
     const event_id2 = req.body.event_id;
     const event_id3 = req.body.event_id;
+    const event_id4 = req.body.event_id;
     connection.query(
-        "DELETE FROM task WHERE (event_id = ?)", [event_id],
+        "DELETE FROM report WHERE (event_id = ?)", [event_id],
         (err, response) => {
-            if (err) res.send({ message: "Cannot delete this event, try again !" });
+            if (err) res.send({ message: err });
             else if (response) {
                 connection.query(
                     "DELETE FROM finance WHERE (event_id = ?)", [event_id1],
                     (err, response) => {
-                        if (err)
-                            res.send({ message: "Cannot delete this event, try again !" });
+                        if (err) res.send({ message: err });
                         else if (response) {
                             connection.query(
                                 "DELETE FROM event_show WHERE (event_id = ?)", [event_id2],
                                 (err) => {
                                     if (err)
                                         res.send({
-                                            message: "Cannot delete this event, try again !",
+                                            message: err,
                                         });
                                     else if (response) {
                                         connection.query(
-                                            "DELETE FROM emd_event WHERE (event_id = ?)", [event_id3],
+                                            "DELETE FROM task WHERE (event_id = ?)", [event_id4],
                                             (err, response) => {
                                                 if (err)
                                                     res.send({
-                                                        message: "Cannot delete this event, try again !",
+                                                        message: err,
                                                     });
-                                                else res.send(response);
+                                                else if (response) {
+                                                    connection.query(
+                                                        "DELETE FROM emd_event WHERE (event_id = ?)", [event_id3],
+                                                        (err, response) => {
+                                                            if (err)
+                                                                res.send({
+                                                                    message: err,
+                                                                });
+                                                            else res.send(response);
+                                                        }
+                                                    );
+                                                }
                                             }
                                         );
                                     } else
@@ -833,10 +875,19 @@ router.post("/update-report", (req, res) => {
 router.post("/event-staff", (req, res) => {
     const staff_id = req.body.staff_id;
     connection.query(
-        "SELECT distinct b.event_id, b.event_name, b.event_place, b.event_date, b.event_duration, b.event_description, DATE_FORMAT(b.event_date, '%d-%m-%Y') as event_date, DATE_FORMAT(b.event_date, '%H:%i:%s') as event_time, b.event_date as time FROM task a, emd_event b where a.event_id = b.event_id and a.staff_id LIKE ?", [staff_id],
+        "SELECT * FROM assignment WHERE staff_id LIKE ?", [staff_id],
         (err, response) => {
             if (err) res.send({ message: err });
-            else res.send(response);
+            else if (response.length === 0) res.send([]);
+            else {
+                connection.query(
+                    "SELECT distinct b.event_id, b.event_name, b.event_place, b.event_date, b.event_duration, b.event_description, DATE_FORMAT(b.event_date, '%d-%m-%Y') as event_date, DATE_FORMAT(b.event_date, '%H:%i:%s') as event_time, b.event_date as time FROM task a, emd_event b WHERE a.event_id = b.event_id and a.staff_id LIKE ?", [staff_id],
+                    (err, response) => {
+                        if (err) res.send({ message: err });
+                        else res.send(response);
+                    }
+                );
+            }
         }
     );
 });
@@ -875,10 +926,18 @@ router.post("/task-staff-done", (req, res) => {
 router.post("/task-staff-inprocess", (req, res) => {
     const staff_id = req.body.staff_id;
     connection.query(
-        'SELECT distinct * from task where staff_id like ? and status = "In Process"', [staff_id],
+        "SELECT DISTINCT * FROM assignment WHERE staff_id LIKE ?", [staff_id],
         (err, response) => {
             if (err) res.send({ message: err });
-            else res.send(response);
+            else if (response.length !== 0) {
+                connection.query(
+                    'SELECT distinct * from task where staff_id like ? and status = "In Process"', [staff_id],
+                    (err, response) => {
+                        if (err) res.send({ message: err });
+                        else res.send(response);
+                    }
+                );
+            } else res.send([]);
         }
     );
 });
@@ -919,10 +978,11 @@ router.post("/report", (req, res) => {
     const task_id = req.body.task_id;
     const report_detail = req.body.report_detail;
     const report_time = req.body.report_time;
+    const annunciator = req.body.annunciator;
     connection.query(
-        "INSERT INTO report (event_id, task_id, report_detail, report_time) VALUES (?, ?, ?, ?)", [event_id, task_id, report_detail, report_time],
+        "INSERT INTO report (event_id, task_id, report_detail, report_time, annunciator) VALUES (?, ?, ?, ?, ?)", [event_id, task_id, report_detail, report_time, annunciator],
         (err, response) => {
-            if (err) res.send({ message: "Can't report ! Please try again !" });
+            if (err) res.send({ message: err });
             else res.send(response);
         }
     );

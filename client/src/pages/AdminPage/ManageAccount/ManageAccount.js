@@ -58,12 +58,14 @@ const ManageAccount = () => {
           >
             <EditIcon />
           </div>
-          <div
-            className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorInherit ml-1"
-            onClick={() => blockUser(rowData)}
-          >
-            <BlockIcon />
-          </div>
+          {rowData.account_role !== "Blocked" && (
+            <div
+              className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorInherit ml-1"
+              onClick={() => blockUser(rowData)}
+            >
+              <BlockIcon />
+            </div>
+          )}
         </>
       ),
     },

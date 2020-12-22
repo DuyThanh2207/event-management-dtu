@@ -16,7 +16,7 @@ function DetailsAccount() {
   const handleSubmit = () => {
     axios
       .post("/edit-account-details", {
-        account_id: sessionStorage.getItem("account_id"),
+        account_username: sessionStorage.getItem("account_username"),
         account_name: name,
         account_email: email,
       })
@@ -36,7 +36,7 @@ function DetailsAccount() {
   const fetchAccountData = async () => {
     const data = await axios
       .post("/account-details", {
-        account_id: sessionStorage.getItem("account_id"),
+        account_username: sessionStorage.getItem("account_username"),
       })
       .then((res) => {
         if (res.data.length > 0) {
@@ -59,65 +59,86 @@ function DetailsAccount() {
         <Header />
         <div className="container mt-5 d-flex justify-content-center">
           <div className="card" style={{ width: "50%" }}>
+            <div className="d-flex justify-content-between">
+              <div></div>
+              <h2 className="mt-3">Account Details</h2>
+              <div className="btn btn-warning" onClick={() => setEdit(false)}>
+                Edit
+              </div>
+            </div>
+            <hr />
             <div className="card-body d-flex justify-content-center">
               <ValidatorForm onSubmit={handleSubmit} style={{ width: "100%" }}>
-                <div className="d-flex justify-content-between">
-                  <h2 className="mt-3">Account Details</h2>
-                  <div
-                    className="btn btn-warning"
-                    onClick={() => setEdit(false)}
-                  >
-                    Edit
+                <div className="row">
+                  <div className="col-2 mt-2">
+                    <div className="d-flex">
+                      Name
+                      <div className="ml-1" style={{ color: "red" }}>
+                        *
+                      </div>
+                    </div>
+                    <br />
+                    <div className="d-flex mt-2">
+                      Email
+                      <div className="ml-1" style={{ color: "red" }}>
+                        *
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-10">
+                    {edit ? (
+                      <div>
+                        <TextValidator
+                          disabled
+                          style={{ width: "100%" }}
+                          value={name}
+                        />
+                        <br />
+                        <TextValidator
+                          disabled
+                          style={{ width: "100%" }}
+                          value={email}
+                        />
+                      </div>
+                    ) : (
+                      <div>
+                        <TextValidator
+                          style={{ width: "100%" }}
+                          onChange={(event) => setName(event.target.value)}
+                          value={name}
+                          validators={["required"]}
+                          errorMessages={["This field is required"]}
+                        />
+                        <br />
+                        <TextValidator
+                          style={{ width: "100%" }}
+                          onChange={(event) => setEmail(event.target.value)}
+                          value={email}
+                          validators={["required"]}
+                          errorMessages={["This field is required"]}
+                        />
+                        <br />
+                        <h5 className="mb-3" style={{ color: "red" }}>
+                          * is require
+                        </h5>
+                        <Button
+                          color="primary"
+                          variant="contained"
+                          type="submit"
+                        >
+                          Submit
+                        </Button>
+                        <Button
+                          className="ml-3"
+                          variant="contained"
+                          onClick={() => setEdit(true)}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </div>
-                {edit ? (
-                  <div>
-                    <TextValidator
-                      disabled
-                      style={{ width: "100%" }}
-                      label="Name"
-                      value={name}
-                    />
-                    <br />
-                    <TextValidator
-                      disabled
-                      style={{ width: "100%" }}
-                      label="Email"
-                      value={email}
-                    />
-                  </div>
-                ) : (
-                  <div>
-                    <TextValidator
-                      style={{ width: "100%" }}
-                      label="Name"
-                      onChange={(event) => setName(event.target.value)}
-                      value={name}
-                      validators={["required"]}
-                      errorMessages={["This field is required"]}
-                    />
-                    <br />
-                    <TextValidator
-                      style={{ width: "100%" }}
-                      label="Email"
-                      onChange={(event) => setEmail(event.target.value)}
-                      value={email}
-                      validators={["required"]}
-                      errorMessages={["This field is required"]}
-                    />
-                    <br />
-                    <Button color="primary" variant="contained" type="submit">
-                      Submit
-                    </Button>
-                    <Button
-                      className="ml-3"
-                      variant="contained"
-                      onClick={() => setEdit(true)}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                )}
               </ValidatorForm>
             </div>
           </div>
