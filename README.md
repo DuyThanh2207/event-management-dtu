@@ -1,4 +1,4 @@
-Step 1: Export database.sql to MySQL, rename database to emd
+Step 1: Import database.sql to MySQL, rename database to emd
 
 Step 2: Create an admin account in the account table from the database you just imported according to the following instructions:
     
