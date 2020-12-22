@@ -193,7 +193,7 @@ router.post("/create-user", (req, res) => {
                     );
                 } else {
                     connection.query(
-                        "INSERT INTO account (account_name, account_username, account_password, account_email, account_role, account_color, is_admin) VALUES (?, ?, ?, ?, ?, ?, 'true')", [
+                        "INSERT INTO account (account_name, account_username, account_password, account_email, account_role, account_color) VALUES (?, ?, ?, ?, ?, ?)", [
                             account_name,
                             account_username,
                             account_password,
