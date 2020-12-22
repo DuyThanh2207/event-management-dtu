@@ -66,6 +66,7 @@ function ReportStaff() {
         task_id: taskSelected,
         report_detail: report,
         report_time: datetime,
+        annunciator: sessionStorage.getItem("account_username"),
       })
       .then((res) => {
         if (res.data.message)

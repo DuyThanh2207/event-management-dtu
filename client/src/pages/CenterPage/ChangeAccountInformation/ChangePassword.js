@@ -27,7 +27,7 @@ const ChangePassword = () => {
         .post("/change-password", {
           new_password: newPassword,
           old_password: oldPassword,
-          account_id: sessionStorage.getItem("account_id"),
+          account_username: sessionStorage.getItem("account_username"),
         })
         .then((res) => {
           if (res.data.message) {

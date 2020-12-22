@@ -68,6 +68,7 @@ const EventStaff = () => {
         staff_id: "%" + sessionStorage.getItem("account_username") + "%",
       })
       .then((res) => {
+        console.log(res.data);
         if (res.data.length > 0) setEventData(res.data);
       })
       .catch((error) => {
