@@ -9,10 +9,15 @@ Step 4: Go to sever/routers/index.js
 Changes based on your database
 
 const connection = mysql.createPool({
+
     host: "localhost", //your host
+    
     user: "root", //your user
+    
     password: "111111", //your password
+    
     database: "emd",
+    
 });
 
 Step 4: Open command in Sever Folder, run 'npm start'
