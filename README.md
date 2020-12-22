@@ -2,17 +2,17 @@ Step 1: Export database.sql to MySQL, rename database to emd
 
 Step 2: Create an admin account in the account table from the database you just imported according to the following instructions:
     
-    account_username: /*Your account username*/
-    
-    account_name: /*Your account name*/
-    
-    account_password: /*Your account password*/
-    
-    account_email: /*Your account email*/
-    
-    account_role: Admin
-    
-    is_admin: true
+        account_username: /*Your account username*/
+
+        account_name: /*Your account name*/
+
+        account_password: /*Your account password*/
+
+        account_email: /*Your account email*/
+
+        account_role: Admin
+
+        is_admin: true
 
 Step 2: Open command in Client Folder, run 'npm install'
 
