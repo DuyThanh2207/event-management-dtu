@@ -20,6 +20,6 @@ Changes based on your database
 
     });
 
-Step 4: Open command in Sever Folder, run 'npm start'
+Step 5: Open command in Sever Folder, run 'npm start'
 
-Step 5: Open command in Client Folder, run 'npm start'
+Step 6: Open command in Client Folder, run 'npm start'
